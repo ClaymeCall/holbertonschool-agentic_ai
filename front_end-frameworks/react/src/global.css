@@ -1,12 +1,5 @@
-:root {
-  /* Primary colors */
-  --bg-slate-950: #020617;
-  --bg-black: #000000;
-  --bg-violet-500: #8b5cf6;
+@import "tailwindcss";
 
-  /* Text colors */
-  --text-violet-300: #c4b5fd;
-  --text-slate-50: #f8fafc;
-  --text-slate-300: #cbd5e1;
-  --text-slate-500: #64748b;
-}
+:root {
+  font-family: Helvetica;
+  }
