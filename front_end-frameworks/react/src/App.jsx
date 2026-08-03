@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main>
+      <main className="max-w-6xl mx-auto px-6">
         <Hero />
       </main>
     </div>

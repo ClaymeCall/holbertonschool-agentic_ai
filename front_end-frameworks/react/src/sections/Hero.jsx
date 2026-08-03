@@ -11,8 +11,13 @@ export default function Hero() {
     <section id="hero-section" className="pt-36 pb-24">
       <div> The future of coding</div>
       <hgroup>
-        <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none">
-          Build smarter workflows with Agentic AI
+        <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none text-center">
+          <p className="text-slate-50">
+            Build smarter workflows
+          </p>
+          <p className="text-violet-300">
+            with Agentic AI
+          </p>
         </h1>
         <p>
           Create autonomous AI agents that think, plan and execute complex tasks. Transform your business with intelligent automation.
