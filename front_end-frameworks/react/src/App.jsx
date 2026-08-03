@@ -1,12 +1,13 @@
-import {BrainCircuit} from 'lucide-react';
-function app() {
+import Header from './components/Header';
+
+function App() {
   return (
     <>
+      <Header />
       <h1>Agentic AI</h1>
-      <h2>Short subtitle </h2>
-      <BrainCircuit></BrainCircuit>
+      <h2>Short subtitle</h2>
     </>
   )
 }
 
-export default app
+export default App
