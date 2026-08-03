@@ -9,7 +9,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="h-20 flex justify-between p-5 md:px-15 bg-slate-950 fixed w-full">
+    <header className="flex justify-between p-5 md:px-15 bg-slate-950 fixed w-full">
 
       <div className="flex items-center gap-2">
         <div className="p-2 bg-violet-500 rounded-xl shadow-lg shadow-violet-500/40">

@@ -8,7 +8,7 @@ const stats = [
 ]
 export default function Hero() {
   return (
-    <section id="hero-section" className="h-[var(--header-height)]">
+    <section id="hero-section" className="pt-36 pb-24">
       <div> The future of coding</div>
       <hgroup>
         <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none">

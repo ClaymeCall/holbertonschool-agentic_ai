@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="mt-20">
+      <main>
         <Hero />
       </main>
     </div>
