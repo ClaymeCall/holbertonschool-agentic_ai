@@ -1,0 +1,10 @@
+/home/clement/.config/nixpkgs/overlays
+/home/clement/.config/nixpkgs/overlays.nix
+/home/clement/Code/holberton-agentic_ai/front_end-frameworks/react/.devenv/bootstrap/bootstrapLib.nix
+/home/clement/Code/holberton-agentic_ai/front_end-frameworks/react/.devenv/bootstrap/default.nix
+/home/clement/Code/holberton-agentic_ai/front_end-frameworks/react/.devenv/bootstrap/resolve-lock.nix
+/home/clement/Code/holberton-agentic_ai/front_end-frameworks/react/devenv.local.nix
+/home/clement/Code/holberton-agentic_ai/front_end-frameworks/react/devenv.lock
+/home/clement/Code/holberton-agentic_ai/front_end-frameworks/react/devenv.nix
+/home/clement/Code/holberton-agentic_ai/front_end-frameworks/react/devenv.yaml
+/home/clement/Code/holberton-agentic_ai/front_end-frameworks/react/.env
