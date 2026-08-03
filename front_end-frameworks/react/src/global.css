@@ -2,4 +2,6 @@
 
 :root {
   font-family: Helvetica;
-  }
+  color: #f8fafc; /* --text-slate-50 */
+  background: #000000; /* --bg-black */
+}
