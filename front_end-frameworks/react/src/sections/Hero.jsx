@@ -1,4 +1,5 @@
-import {ArrowRight, Dot} from 'lucide-react';
+import {ArrowRight,} from 'lucide-react';
+import Eyebrow from '../components/Eyebrow.jsx'
 
 const stats = [
   {stat: "Active agents", value: "10K+"},
@@ -6,29 +7,19 @@ const stats = [
   {stat: "Tasks automated", value: "50M+"},
   {stat: "Support", value: "24/7"},
 ]
+
 export default function Hero() {
   return (
-    <section id="hero-section" className="flex flex-col items-center pt-36 pb-24">
-      <div className="
-        mb-10
-        w-fit
-        flex
-        items-center
-        justify-center
-        px-4
-        py-2
-        text-xs
-        text-violet-300
-        rounded-full
-        border border-violet-500/20
-        bg-violet-500/10
-        ">
-        <Dot />
-        <span>
-          The future of coding
-        </span>
-        <Dot />
-      </div>
+    <section id="hero-section" className="
+      bg-[linear-gradient(to_right,rgba(148,163,184,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.12)_1px,transparent_1px)]
+      bg-[size:72px_72px]
+      flex
+      flex-col
+      items-center
+      pt-36
+      pb-24
+      ">
+      <Eyebrow>The future of AI</Eyebrow>
       <hgroup className="mb-10 flex flex-col items-center">
         <h1 className="mb-10 text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-none text-center">
           <p className="text-slate-50">
