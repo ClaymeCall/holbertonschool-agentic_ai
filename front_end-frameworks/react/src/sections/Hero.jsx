@@ -1,4 +1,4 @@
-import {ArrowRight,} from 'lucide-react';
+import {ArrowRight} from 'lucide-react';
 import Eyebrow from '../components/Eyebrow.jsx'
 
 const stats = [

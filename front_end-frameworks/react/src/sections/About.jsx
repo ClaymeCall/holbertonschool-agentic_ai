@@ -1,5 +1,6 @@
 import {Dot} from 'lucide-react';
 import Eyebrow from '../components/Eyebrow.jsx'
+import steps from '../data/steps.js'
 
 export default function About() {
   return (
@@ -18,6 +19,24 @@ export default function About() {
           Agentic AI refers to artificial intelligence systems designed to pursue goals, make decisions, use tools, and adapt their actions across multiple steps. Instead of only responding to a single prompt, an AI agent can break down a task, plan a strategy, execute actions, evaluate results, and continue until the objective is reached.
         </p>
       </hgroup>
+
+      <div className="flex flex-col">
+        {steps.map((step) => (
+          <div key={step.number} className="flex gap-8 pb-5">
+            <div className="flex justify-center items-center bg-violet-500 size-8 rounded-full text-xs font-black">
+              {step.number}
+            </div>
+            <div className="pt-1">
+              <h3 className="font-bold text-slate-50">
+                {step.title}
+              </h3>
+              <p className="text-slate-300">
+                {step.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
