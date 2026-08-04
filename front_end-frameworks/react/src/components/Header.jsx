@@ -13,7 +13,7 @@ export default function Header() {
 
       <div className="flex items-center gap-2">
         <div className="p-2 bg-violet-500 rounded-xl shadow-lg shadow-violet-500/40">
-          <BrainCircuit className="stroke-violet-300"/>
+          <BrainCircuit />
         </div>
         <span className="text-slate-50 font-bold">Agentic AI</span>
       </div>
@@ -26,7 +26,7 @@ export default function Header() {
             </a>
           ))}
         </div>
-        <a href="" className="px-4 py-2 font-semibold rounded-md bg-violet-500 text-slate-300 hover:bg-violet-600 shadow-lg shadow-violet-500/40">
+        <a href="" className="px-4 py-2 font-semibold rounded-md bg-violet-500 hover:bg-violet-600 shadow-lg shadow-violet-500/40">
           Enroll now
         </a>
       </nav>

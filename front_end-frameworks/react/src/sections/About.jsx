@@ -31,7 +31,7 @@ export default function About() {
             <dd className="text-slate-500">
               Responds to direct instructions, generates content, answers questions, or analyzes information within limited interaction.
             </dd>
-            <hr className="bg-slate-500 my-5" />
+            <hr className="text-slate-500 my-5" />
             <dt className="text-violet-300 font-bold">
               Agentic AI
             </dt>
@@ -44,7 +44,7 @@ export default function About() {
         <ol className="flex flex-col flex-shrink-2">
           {steps.map((step) => (
             <li key={step.number} className="flex gap-8 pb-5">
-              <div className="flex justify-center items-center bg-violet-500 flex-shrink-0 size-8 rounded-full text-xs font-black">
+              <div className="flex justify-center items-center bg-violet-500 flex-shrink-0 size-8 rounded-full text-xs font-black shadow-lg shadow-violet-500/40">
                 {step.number}
               </div>
               <div className="pt-1">
