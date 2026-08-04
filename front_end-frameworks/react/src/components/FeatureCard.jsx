@@ -15,10 +15,10 @@ function selectIcon(icon) {
 export default function FeatureCard({ icon, title = "Feature Title", description = "Feature Description" }) {
   return(
     <article className="p-8 rounded-3xl border border-slate-800 bg-slate-950 shadow-xl shadow-slate-950/40">
-      <div className="flex items-center justify-center size-10 mb-3 bg-violet-500 rounded-lg">
+      <div className="flex items-center justify-center size-10 mb-5 bg-violet-500 rounded-lg shadow-lg shadow-violet-500/40">
         { selectIcon(icon) }
       </div>
-      <h3 className="font-bold">
+      <h3 className="mb-2 font-bold">
         {title}
       </h3>
 
