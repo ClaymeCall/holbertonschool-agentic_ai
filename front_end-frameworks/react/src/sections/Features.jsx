@@ -18,11 +18,15 @@ export default function Features() {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {features.map((feature) => (
-          <FeatureCard icon={feature.icon} title={feature.title} description={feature.description} />
-        ))}
+         {features.map((feature) => (
+           <FeatureCard
+             key={feature.title}
+             icon={feature.icon}
+             title={feature.title}
+             description={feature.description}
+           />
+         ))}
       </div>
-
 
     </section>
   );
