@@ -8,8 +8,15 @@
     "deploy": "npm run build && gh-pages -d dist",
     "dev": "vite",
     "fix": "eslint . --fix",
+    "format": "prettier --write ./src/**/*.{js,jsx}",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "quality": "npm run fix && npm run format"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -28,6 +35,8 @@
     "eslint-plugin-react-refresh": "^0.5.3",
     "gh-pages": "^6.3.0",
     "globals": "^17.7.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "vite": "^8.2.0"
   }
 }
