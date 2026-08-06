@@ -22,8 +22,8 @@ export default function About() {
           </p>
         </hgroup>
 
-        <div className="flex w-full flex-col items-center gap-10 sm:flex-row">
-          <dl className="mb-10 h-fit w-full flex-shrink-5 rounded-3xl border border-slate-500/50 bg-slate-950 p-7">
+        <div className="mt-8 grid items-center justify-center gap-8 md:grid-cols-[1fr_1.2fr]">
+          <dl className="h-fit w-full rounded-3xl border border-slate-500/50 bg-slate-950 p-7">
             <dt className="pb-2 text-lg font-bold">Traditional AI</dt>
             <dd className="text-sm text-slate-500">
               Responds to direct instructions, generates content, answers
@@ -39,7 +39,7 @@ export default function About() {
             </dd>
           </dl>
 
-          <ol className="relative flex flex-shrink-1 flex-col">
+          <ol className="relative w-full flex-col">
             <div className="absolute top-4 bottom-4 left-4 -z-1 w-px bg-gradient-to-b from-violet-500 to-transparent" />
             {steps.map((step) => (
               <li key={step.number} className="flex gap-8 pb-5">
