@@ -4,7 +4,7 @@ import features from "../data/features.js";
 
 export default function Features() {
   return (
-    <section id="features-section" className="flex flex-col items-center py-24">
+    <section id="features-section" className="flex flex-col items-center pb-24">
       <div className="mx-auto max-w-6xl px-6">
         <Eyebrow>Features</Eyebrow>
 

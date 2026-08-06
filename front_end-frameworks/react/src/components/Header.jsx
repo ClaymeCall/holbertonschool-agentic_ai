@@ -9,16 +9,16 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed flex w-full z-1000 bg-slate-950 p-5 ">
+    <header className="fixed flex w-full z-1000 bg-slate-950 px-5 py-3">
       <div className="flex w-full justify-between mx-auto max-w-6xl px-6">
         <div className="flex items-center gap-2">
-          <div className="rounded-xl bg-violet-500 p-2 shadow-lg shadow-violet-500/40">
-            <BrainCircuit />
+          <div className="w-7 h-7 flex flex-row justify-center items-center text-xs font-black rounded-lg bg-violet-500 shadow-lg shadow-violet-500/40">
+            <BrainCircuit className="size-4"/>
           </div>
-          <span className="font-bold text-slate-50">Agentic AI</span>
+          <span className="font-bold text-slate-50 text-sm">Agentic AI</span>
         </div>
 
-        <nav className="flex items-center gap-4 text-sm">
+        <nav className="flex items-center gap-4 text-xs">
           <div className="hidden md:flex text-slate-500">
             {navLinks.map(({ href, label }) => (
               <a

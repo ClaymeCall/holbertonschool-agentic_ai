@@ -1,6 +1,7 @@
-import { ArrowRight } from "lucide-react";
 import CoolBackground from "../components/CoolBackground.jsx";
 import Eyebrow from "../components/Eyebrow.jsx";
+import CallToActionButton from "../components/buttons/CallToActionButton.jsx";
+import SecondaryButton from "../components/buttons/SecondaryButton.jsx";
 
 const stats = [
   { stat: "Active agents", value: "10K+" },
@@ -13,7 +14,7 @@ export default function Hero() {
   return (
     <section
       id="hero-section"
-      className="pt-36 pb-24"
+      className="relative flex flex-col items-center pt-36 pb-24"
     >
       <CoolBackground />
 
@@ -30,10 +31,9 @@ export default function Hero() {
           </p>
         </hgroup>
         <div className="mb-15 flex flex-col items-center justify-center gap-4 md:flex-row">
-          <a className="flex w-fit items-center gap-1 rounded-md bg-violet-500 px-4 py-2 font-semibold shadow-lg shadow-violet-500/40 hover:bg-violet-600">
+          <CallToActionButton>
             Start learning with Holberton School
-            <ArrowRight className="size-3 stroke-width-2"/>
-          </a>
+          </CallToActionButton>
           <a className="w-fit rounded-md border border-slate-800 bg-slate-950 px-4 py-2 font-semibold hover:bg-slate-900">
             Methodology
           </a>
