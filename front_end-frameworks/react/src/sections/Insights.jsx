@@ -4,12 +4,14 @@ import InsightCard from "../components/InsightCard.jsx";
 import getInsights from "../services/insightsService.js";
 
 export default function Insights() {
-  const [insights, setInsights] = React.useState([]);
+  const [insights, setInsights] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState([]);
 
   React.useEffect(() => {
-    getInsights().then(setInsights);
+    getInsights().then(setInsights).catch(setErrorMessage);
   }, []);
+
+  if (errorMessage) return <div className="text-red-500">{errorMessage}</div>;
 
   if (insights.length === 0) return null;
 
