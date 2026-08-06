@@ -28,20 +28,20 @@ export default function Hero() {
       <div className="mb-15 flex flex-col items-center justify-center gap-4 md:flex-row">
         <a className="flex w-fit items-center gap-1 rounded-md bg-violet-500 px-4 py-2 font-semibold shadow-lg shadow-violet-500/40 hover:bg-violet-600">
           Start learning with Holberton School
-          <ArrowRight />
+          <ArrowRight className="size-3 stroke-width-2"/>
         </a>
         <a className="w-fit rounded-md border border-slate-800 bg-slate-950 px-4 py-2 font-semibold hover:bg-slate-900">
           Methodology
         </a>
       </div>
-      <dl className="grid grid-cols-2 gap-8 md:grid-cols-4">
+      <dl className="grid w-9/10 grid-cols-2 gap-8 md:grid-cols-4">
         {stats.map(({ stat, value }) => (
           <div
             key={stat}
-            className="align-center flex flex-col-reverse items-center rounded-xl border border-slate-800 bg-slate-950 p-6 text-center shadow-xl shadow-slate-950/40"
+            className="align-center flex flex-col-reverse items-center rounded-xl border border-slate-800 bg-slate-950 p-6 gap-1 text-center shadow-xl shadow-slate-950/40"
           >
-            <dt className="text-slate-500">{stat}</dt>
-            <dd className="text-5xl font-black text-violet-300">{value}</dd>
+            <dt className="text-slate-500 text-xs">{stat}</dt>
+            <dd className="text-4xl font-black text-violet-300">{value}</dd>
           </div>
         ))}
         <div></div>

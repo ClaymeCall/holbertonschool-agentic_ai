@@ -1,7 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  font-family: Helvetica;
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --default-font-family: var(--font-sans);
   color: #f8fafc; /* --text-slate-50 */
   background: #000000; /* --bg-black */
+}
+
+html {
+  scroll-behavior: smooth;
 }

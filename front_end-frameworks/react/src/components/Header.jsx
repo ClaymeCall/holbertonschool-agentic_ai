@@ -17,12 +17,12 @@ export default function Header() {
         <span className="font-bold text-slate-50">Agentic AI</span>
       </div>
 
-      <nav className="flex items-center gap-4 text-slate-500">
-        <div className="hidden md:flex">
+      <nav className="flex items-center gap-4 text-sm">
+        <div className="hidden md:flex text-slate-500">
           {navLinks.map(({ href, label }) => (
             <a
               key={href}
-              className="rounded-md px-4 py-2 hover:bg-black"
+              className="rounded-md px-4 py-2 hover:text-slate-50"
               href={href}
             >
               {label}

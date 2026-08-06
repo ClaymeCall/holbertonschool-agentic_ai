@@ -21,21 +21,19 @@ export default function About() {
       </hgroup>
 
       <div className="flex w-full flex-col items-center gap-10 sm:flex-row">
-        <div className="mb-10 h-fit flex-shrink-3 rounded-3xl border border-slate-500 bg-slate-950 p-7">
-          <dl className="w-full">
+          <dl className="w-full mb-10 h-fit flex-shrink-3 rounded-3xl border border-slate-500 bg-slate-950 p-7">
             <dt className="pb-2 text-lg font-bold">Traditional AI</dt>
             <dd className="text-slate-500">
               Responds to direct instructions, generates content, answers
               questions, or analyzes information within limited interaction.
             </dd>
-            <hr className="my-5 text-slate-500" />
-            <dt className="font-bold text-violet-300">Agentic AI</dt>
+            <hr className="my-5 text-slate-500/50" />
+            <dt className="pb-2 text-lg font-bold text-violet-300">Agentic AI</dt>
             <dd className="text-slate-500">
               Understands a goal, chooses actions, uses external tools, follows
               a plan, and adjusts its behaviour based on feedback.
             </dd>
           </dl>
-        </div>
 
         <ol className="flex flex-shrink-2 flex-col">
           {steps.map((step) => (
