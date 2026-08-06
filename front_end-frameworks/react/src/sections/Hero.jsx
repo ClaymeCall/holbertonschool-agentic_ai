@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import CoolBackground from "../components/CoolBackground.jsx";
 import Eyebrow from "../components/Eyebrow.jsx";
 
 const stats = [
@@ -12,8 +13,9 @@ export default function Hero() {
   return (
     <section
       id="hero-section"
-      className="flex flex-col items-center bg-[linear-gradient(to_right,rgba(148,163,184,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.12)_1px,transparent_1px)] bg-[size:72px_72px] pt-36 pb-24"
+      className="flex flex-col items-center pt-36 pb-24"
     >
+      <CoolBackground />
       <Eyebrow>The future of AI</Eyebrow>
       <hgroup className="mb-10 flex flex-col items-center">
         <h1 className="mb-10 text-center text-4xl leading-none font-black tracking-tight sm:text-5xl md:text-7xl">
@@ -44,7 +46,6 @@ export default function Hero() {
             <dd className="text-4xl font-black text-violet-300">{value}</dd>
           </div>
         ))}
-        <div></div>
       </dl>
     </section>
   );
