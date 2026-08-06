@@ -6,13 +6,13 @@ export default function InsightCard({
   image,
 }) {
   return (
-    <article
-      className={`flex flex-col ${index === 0 && "sm:col-span-2"} rounded-3xl border border-slate-800 py-30 px-8 shadow-xl shadow-slate-950/40 relative overflow-hidden`}
-    >
+      <article
+        className={`flex flex-col ${index === 0 && "sm:col-span-2"} rounded-3xl border border-slate-800 py-30 px-8 shadow-xl shadow-slate-950/40 relative overflow-hidden hover:[&>img]:scale-110 hover:[&>img]:brightness-50`}
+      >
       <img
         src={image}
         alt=""
-        className="absolute inset-0 w-full h-full hover:scale-120 object-cover"
+        className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black to-70%"></div>
       <div className="flex-shrink-0 basis-1/2 relative z-10"></div>
