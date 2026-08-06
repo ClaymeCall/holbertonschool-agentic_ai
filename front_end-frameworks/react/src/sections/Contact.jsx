@@ -1,10 +1,10 @@
 import React from "react";
 import { User, AtSign, Mail } from "lucide-react";
-import { FolderCode, Sparkles, Users } from "lucide-react";
 import Eyebrow from "../components/Eyebrow.jsx";
 import CoolBackground from "../components/CoolBackground.jsx";
 import CallToActionButton from "../components/buttons/CallToActionButton.jsx";
 import SecondaryButton from "../components/buttons/SecondaryButton.jsx";
+import Highlight from "../components/Highlight.jsx";
 
 export default function Contact() {
   return (
@@ -17,33 +17,23 @@ export default function Contact() {
       <div className="mx-auto max-w-6xl px-6">
         <Eyebrow>Start your AI journey</Eyebrow>
 
-        <h2 className="text-center text-4xl leading-none font-black tracking-tight sm:text-5xl md:text-7xl">
+        <h2 className="mb-16 text-center text-4xl leading-none font-black tracking-tight sm:text-5xl md:text-7xl">
           <p className="text-slate-50">Ready to Explore</p>
           <p className="text-violet-300">Agentic AI?</p>
         </h2>
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 pb-8 sm:flex-row">
+        <div className="flex flex-col items-center justify-center gap-4 pb-8 sm:flex-row">
           <CallToActionButton>Enroll at Holberton School</CallToActionButton>
           <SecondaryButton>Need more information?</SecondaryButton>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-8">
-          <div className="flex gap-2">
-            <FolderCode className="m-auto size-4 stroke-violet-500" />
-            <p className="text-sm text-slate-500">Project-based learning</p>
-          </div>
+        <div className="flex flex-wrap items-center justify-center gap-8 mb-18">
+          <Highlight icon="FolderCode">Project-based learning </Highlight>
+          <Highlight icon="Users">Peer learning environment</Highlight>
+          <Highlight icon="Sparkles">AI-powered workflows</Highlight>
+        </div>
 
-          <div className="flex gap-2">
-            <Users className="m-auto size-4 stroke-violet-500" />
-            <p className="text-sm text-slate-500">Peer learning environment</p>
-          </div>
-
-          <div className="flex gap-2">
-            <Sparkles className="m-auto size-4 stroke-violet-500" />
-            <p className="text-sm text-slate-500">AI-powered workflow</p>
-          </div>
-
-          <form className="mt-8 flex w-full max-w-2xl flex-col items-center justify-center gap-8 rounded-3xl border border-slate-800 bg-slate-950/80 p-8 text-start shadow-2xl shadow-slate-950/40 backdrop-blur">
+          <form className="flex w-full max-w-2xl flex-col items-center justify-center gap-8 rounded-3xl border border-slate-800 bg-slate-950/80 p-8 text-start shadow-2xl shadow-slate-950/40 backdrop-blur">
             <div className="flex w-full flex-col items-start gap-2">
               <label
                 htmlFor="name"
@@ -100,8 +90,10 @@ export default function Contact() {
             >
               Send message
             </button>
+          <p className="min-h-5 text-sm text-slate-500 transition">
+            Please fill all required fields.
+          </p>
           </form>
-        </div>
       </div>
     </section>
   );
