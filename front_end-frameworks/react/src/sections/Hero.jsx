@@ -18,7 +18,7 @@ export default function Hero() {
     >
       <CoolBackground />
 
-      <div className="flex flex-col items-center mx-auto max-w-6xl px-6">
+      <div className="mx-auto flex max-w-6xl flex-col items-center px-6">
         <Eyebrow>The future of AI</Eyebrow>
         <hgroup className="mb-10 flex flex-col items-center">
           <h1 className="mb-10 text-center text-4xl leading-none font-black tracking-tight sm:text-5xl md:text-7xl">
@@ -42,9 +42,9 @@ export default function Hero() {
           {stats.map(({ stat, value }) => (
             <div
               key={stat}
-              className="align-center flex flex-col-reverse items-center rounded-xl border border-slate-800 bg-slate-950 p-6 gap-1 text-center shadow-xl shadow-slate-950/40"
+              className="align-center flex flex-col-reverse items-center gap-1 rounded-xl border border-slate-800 bg-slate-950 p-6 text-center shadow-xl shadow-slate-950/40"
             >
-              <dt className="text-slate-500 text-xs">{stat}</dt>
+              <dt className="text-xs text-slate-500">{stat}</dt>
               <dd className="text-4xl font-black text-violet-300">{value}</dd>
             </div>
           ))}

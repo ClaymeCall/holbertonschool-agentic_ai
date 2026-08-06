@@ -13,7 +13,7 @@ export default function Features() {
           <p className="text-violet-300">With powerful AI agents</p>
         </h2>
 
-        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
           {features.map((feature) => (
             <FeatureCard
               key={feature.title}
