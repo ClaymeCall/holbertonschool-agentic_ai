@@ -38,7 +38,7 @@ export default function Hero() {
             Methodology
           </a>
         </div>
-        <dl className="grid max-w-4xl w-full grid-cols-2 gap-8 md:grid-cols-4">
+        <dl className="grid w-full max-w-4xl grid-cols-2 gap-8 md:grid-cols-4">
           {stats.map(({ stat, value }) => (
             <div
               key={stat}
