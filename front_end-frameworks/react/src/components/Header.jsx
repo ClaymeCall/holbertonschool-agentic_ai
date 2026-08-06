@@ -9,33 +9,35 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed flex w-full justify-between bg-slate-950 p-5 md:px-15">
-      <div className="flex items-center gap-2">
-        <div className="rounded-xl bg-violet-500 p-2 shadow-lg shadow-violet-500/40">
-          <BrainCircuit />
+    <header className="fixed flex w-full z-1000 bg-slate-950 p-5 ">
+      <div className="flex w-full justify-between mx-auto max-w-6xl px-6">
+        <div className="flex items-center gap-2">
+          <div className="rounded-xl bg-violet-500 p-2 shadow-lg shadow-violet-500/40">
+            <BrainCircuit />
+          </div>
+          <span className="font-bold text-slate-50">Agentic AI</span>
         </div>
-        <span className="font-bold text-slate-50">Agentic AI</span>
-      </div>
 
-      <nav className="flex items-center gap-4 text-sm">
-        <div className="hidden md:flex text-slate-500">
-          {navLinks.map(({ href, label }) => (
-            <a
-              key={href}
-              className="rounded-md px-4 py-2 hover:text-slate-50"
-              href={href}
-            >
-              {label}
-            </a>
-          ))}
-        </div>
-        <a
-          href=""
-          className="rounded-md bg-violet-500 px-4 py-2 font-semibold shadow-lg shadow-violet-500/40 hover:bg-violet-600"
-        >
-          Enroll now
-        </a>
-      </nav>
+        <nav className="flex items-center gap-4 text-sm">
+          <div className="hidden md:flex text-slate-500">
+            {navLinks.map(({ href, label }) => (
+              <a
+                key={href}
+                className="rounded-md px-4 py-2 hover:text-slate-50"
+                href={href}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+          <a
+            href=""
+            className="rounded-md bg-violet-500 px-4 py-2 font-semibold shadow-lg shadow-violet-500/40 hover:bg-violet-600"
+          >
+            Enroll now
+          </a>
+        </nav>
+      </div>
     </header>
   );
 }

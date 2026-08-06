@@ -15,24 +15,26 @@ export default function Insights() {
 
   return (
     <section id="insights-section" className="flex flex-col items-center py-24">
-      <Eyebrow>Insights</Eyebrow>
+      <div className="mx-auto max-w-6xl px-6">
+        <Eyebrow>Insights</Eyebrow>
 
-      <h2 className="mb-24 text-center text-4xl leading-none font-black tracking-tight md:text-5xl">
-        <p className="text-slate-50">Explore Agentic AI</p>
-        <p className="text-violet-300">Through real-world scenes</p>
-      </h2>
+        <h2 className="mb-24 text-center text-4xl leading-none font-black tracking-tight md:text-5xl">
+          <p className="text-slate-50">Explore Agentic AI</p>
+          <p className="text-violet-300">Through real-world scenes</p>
+        </h2>
 
-      <div className="grid place-items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {insights.map((insight, index) => (
-          <InsightCard
-            index={index}
-            key={insight.category}
-            image={insight.image}
-            category={insight.category}
-            title={insight.title}
-            description={insight.description}
-          />
-        ))}
+        <div className="grid place-items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {insights.map((insight, index) => (
+            <InsightCard
+              index={index}
+              key={insight.category}
+              image={insight.image}
+              category={insight.category}
+              title={insight.title}
+              description={insight.description}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
