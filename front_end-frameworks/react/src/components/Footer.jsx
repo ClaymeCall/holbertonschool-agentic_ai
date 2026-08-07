@@ -33,7 +33,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-black px-8">
+    <footer className="bg-black px-8 pb-24">
       <div className="max-w-6xl mx-auto pt-24 pb-12 flex flex-col md:grid md:grid-cols-5 gap-8">
         <div className="flex flex-col col-span-2 gap-4">
           <Logo />

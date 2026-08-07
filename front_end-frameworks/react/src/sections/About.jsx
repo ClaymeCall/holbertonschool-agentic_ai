@@ -23,36 +23,42 @@ export default function About() {
         </hgroup>
 
         <div className="mt-8 grid items-center justify-center gap-8 md:grid-cols-[1fr_1.2fr]">
-          <dl className="h-fit w-full rounded-3xl border border-slate-500/50 bg-slate-950 p-7">
-            <dt className="pb-2 text-lg font-bold">Traditional AI</dt>
-            <dd className="text-sm text-slate-500">
-              Responds to direct instructions, generates content, answers
-              questions, or analyzes information within limited interaction.
-            </dd>
+          <div className="h-fit w-full rounded-3xl border border-slate-500/50 bg-slate-950 p-7">
+            <dl>
+              <dt className="pb-2 text-lg font-bold">Traditional AI</dt>
+              <dd className="text-sm text-slate-500">
+                Responds to direct instructions, generates content, answers
+                questions, or analyzes information within limited interaction.
+              </dd>
+            </dl>
             <hr className="my-5 text-slate-500/50" />
-            <dt className="pb-2 text-lg font-bold text-violet-300">
-              Agentic AI
-            </dt>
-            <dd className="text-sm text-slate-500">
-              Understands a goal, chooses actions, uses external tools, follows
-              a plan, and adjusts its behaviour based on feedback.
-            </dd>
-          </dl>
+            <dl>
+              <dt className="pb-2 text-lg font-bold text-violet-300">
+                Agentic AI
+              </dt>
+              <dd className="text-sm text-slate-500">
+                Understands a goal, chooses actions, uses external tools, follows
+                a plan, and adjusts its behaviour based on feedback.
+              </dd>
+            </dl>
+          </div>
 
-          <ol className="relative w-full flex-col">
+          <div className="relative w-full">
             <div className="absolute top-4 bottom-4 left-4 -z-1 w-px bg-gradient-to-b from-violet-500 to-transparent" />
-            {steps.map((step) => (
-              <li key={step.number} className="flex gap-8 pb-5">
-                <div className="flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-violet-500 text-xs font-black shadow-lg shadow-violet-500/40">
-                  {step.number}
-                </div>
-                <div className="pt-3">
-                  <h3 className="font-bold text-slate-50">{step.title}</h3>
-                  <p className="text-sm text-slate-300">{step.description}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+            <ol className="flex-col">
+              {steps.map((step) => (
+                <li key={step.number} className="flex gap-8 pb-5">
+                  <div className="flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-violet-500 text-xs font-black shadow-lg shadow-violet-500/40">
+                    {step.number}
+                  </div>
+                  <div className="pt-3">
+                    <h3 className="font-bold text-slate-50">{step.title}</h3>
+                    <p className="text-sm text-slate-300">{step.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </div>
     </section>
