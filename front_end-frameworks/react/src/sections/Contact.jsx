@@ -37,6 +37,24 @@ export default function Contact() {
 
   const isFormValid = validateForm(nameValue, emailValue, messageValue);
 
+  const handleFormSubmit = (submitEvent) => {
+    submitEvent.preventDefault();
+    setSendingStateValue("Sending...");
+    setFeedbackMessage("Sending message...")
+
+    setTimeout(() => {
+      setNameValue("")
+      setEmailValue("")
+      setMessageValue("")
+
+      setSendingStateValue("Send message");
+      setFeedbackMessage("Your message has been sent successfully.")
+
+      setTimeout(() => setFeedbackMessage("Please fill all required fields."), 5000);
+    }, 3000)
+  }
+
+
   return (
     <section
       id="contact-section"
@@ -63,7 +81,10 @@ export default function Contact() {
           <Highlight icon="Sparkles">AI-powered workflows</Highlight>
         </div>
 
-        <form className="flex w-full max-w-2xl flex-col items-center justify-center gap-8 rounded-3xl border border-slate-800 bg-slate-950/80 p-8 text-start shadow-2xl shadow-slate-950/40 backdrop-blur">
+        <form
+          className="flex w-full max-w-2xl flex-col items-center justify-center gap-8 rounded-3xl border border-slate-800 bg-slate-950/80 p-8 text-start shadow-2xl shadow-slate-950/40 backdrop-blur"
+          onSubmit={handleFormSubmit}
+        >
           <div className="flex w-full flex-col items-start gap-2">
             <label
               htmlFor="name"
@@ -134,7 +155,7 @@ export default function Contact() {
           </div>
           <button
             type="submit"
-            disabled={!isFormValid}
+            disabled={!isFormValid || sendingState !== "Send message"}
             className="w-full rounded-md bg-violet-500 px-4 py-2 font-semibold text-slate-50 shadow-lg shadow-violet-500/40 transition disabled:opacity-60"
           >
             {sendingState}
