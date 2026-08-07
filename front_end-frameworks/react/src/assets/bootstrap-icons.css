@@ -27,7 +27,7 @@
 }
 
 /* Only include icons actually used in the project */
-.bi-instagram::before { content: "\f353"; }
-.bi-tiktok::before { content: "\f4e7"; }
-.bi-twitter-x::before { content: "\f86b"; }
-.bi-youtube::before { content: "\f195"; }
+.bi-instagram::before { content: "\f437"; }
+.bi-tiktok::before { content: "\f6cc"; }
+.bi-twitter-x::before { content: "\f8db"; }
+.bi-youtube::before { content: "\f62b"; }

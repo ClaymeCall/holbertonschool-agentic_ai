@@ -40,10 +40,10 @@ export default function Hero() {
         </div>
         <dl className="grid w-full max-w-4xl grid-cols-2 gap-8 md:grid-cols-4">
           {stats.map(({ stat, value }) => (
-            <>
+            <div className="p-6 rounded-xl border border-slate-800 bg-slate-950 shadow-xl shadow-slate-950/40">
               <dt key={stat} className="text-xs text-slate-500 text-center">{stat}</dt>
               <dd className="text-4xl font-black text-violet-300 text-center">{value}</dd>
-            </>
+            </div>
           ))}
         </dl>
       </div>
