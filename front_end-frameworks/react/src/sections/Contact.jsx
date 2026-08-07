@@ -40,20 +40,22 @@ export default function Contact() {
   const handleFormSubmit = (submitEvent) => {
     submitEvent.preventDefault();
     setSendingStateValue("Sending...");
-    setFeedbackMessage("Sending message...")
+    setFeedbackMessage("Sending message...");
 
     setTimeout(() => {
-      setNameValue("")
-      setEmailValue("")
-      setMessageValue("")
+      setNameValue("");
+      setEmailValue("");
+      setMessageValue("");
 
       setSendingStateValue("Send message");
-      setFeedbackMessage("Your message has been sent successfully.")
+      setFeedbackMessage("Your message has been sent successfully.");
 
-      setTimeout(() => setFeedbackMessage("Please fill all required fields."), 5000);
-    }, 3000)
-  }
-
+      setTimeout(
+        () => setFeedbackMessage("Please fill all required fields."),
+        5000,
+      );
+    }, 3000);
+  };
 
   return (
     <section
@@ -96,7 +98,7 @@ export default function Contact() {
             <input
               id="name"
               required
-              autocomplete="off"
+              autoComplete="off"
               placeholder="Your full name..."
               value={nameValue}
               onChange={(event) => setNameValue(event.target.value)}
@@ -119,7 +121,7 @@ export default function Contact() {
             <input
               id="email"
               required
-              autocomplete="off"
+              autoComplete="off"
               placeholder="you@example.com"
               value={emailValue}
               onChange={(event) => setEmailValue(event.target.value)}
@@ -142,7 +144,7 @@ export default function Contact() {
             <textarea
               id="message"
               required
-              autocomplete="off"
+              autoComplete="off"
               placeholder="Tell us about you projects or learning goals!"
               value={messageValue}
               onChange={(event) => setMessageValue(event.target.value)}
