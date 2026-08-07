@@ -2,14 +2,36 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Explore the future of development with Agentic AI.">
     <meta name="robots" content="index, follow">
     <title>Agentic AI</title>
-    <script type="module" crossorigin src="./assets/index-DTxM9R22.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CsYSi-B7.css">
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    
+    <!-- Preload critical font to break render-blocking chain -->
+    <link rel="preload" href="./fonts/bootstrap-icons.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Preconnect to CDN as fallback -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    
+    <!-- Inline critical CSS for above-the-fold content -->
+    <style>
+      :root {
+        --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        --default-font-family: var(--font-sans);
+        color: #f8fafc;
+        background: #000000;
+      }
+      html { scroll-behavior: smooth; }
+      * { transition: all 0.3s ease-in-out; }
+      body { margin: 0; font-family: var(--default-font-family); }
+    </style>
+    
+    <!-- Load non-critical CSS asynchronously -->
+    <link rel="stylesheet" href="data:text/css;base64,LyoKICogQm9vdHN0cmFwIEljb25zIHYxLjEzLjEgLSBPcHRpbWl6ZWQgc3Vic2V0CiAqIE9ubHkgaW5jbHVkZXMgaWNvbnMgdXNlZCBpbiB0aGUgcHJvamVjdDogaW5zdGFncmFtLCB0aWt0b2ssIHR3aXR0ZXIteCwgeW91dHViZQogKiBMaWNlbnNlZCB1bmRlciBNSVQgKGh0dHBzOi8vZ2l0aHViLmNvbS90d2JzL2ljb25zL2Jsb2IvbWFpbi9MSUNFTlNFKQogKi8KCkBmb250LWZhY2UgewogIGZvbnQtZGlzcGxheTogc3dhcDsKICBmb250LWZhbWlseTogImJvb3RzdHJhcC1pY29ucyI7CiAgc3JjOiB1cmwoIi9mb250cy9ib290c3RyYXAtaWNvbnMud29mZjIiKSBmb3JtYXQoIndvZmYyIiksCiAgICAgICB1cmwoIi9mb250cy9ib290c3RyYXAtaWNvbnMud29mZiIpIGZvcm1hdCgid29mZiIpOwp9CgouYmk6OmJlZm9yZSwKW2NsYXNzXj0iYmktIl06OmJlZm9yZSwKW2NsYXNzKj0iIGJpLSJdOjpiZWZvcmUgewogIGRpc3BsYXk6IGlubGluZS1ibG9jazsKICBmb250LWZhbWlseTogYm9vdHN0cmFwLWljb25zICFpbXBvcnRhbnQ7CiAgZm9udC1zdHlsZTogbm9ybWFsOwogIGZvbnQtd2VpZ2h0OiBub3JtYWwgIWltcG9ydGFudDsKICBmb250LXZhcmlhbnQ6IG5vcm1hbDsKICB0ZXh0LXRyYW5zZm9ybTogbm9uZTsKICBsaW5lLWhlaWdodDogMTsKICB2ZXJ0aWNhbC1hbGlnbjogLS4xMjVlbTsKICAtd2Via2l0LWZvbnQtc21vb3RoaW5nOiBhbnRpYWxpYXNlZDsKICAtbW96LW9zeC1mb250LXNtb290aGluZzogZ3JheXNjYWxlOwp9CgovKiBPbmx5IGluY2x1ZGUgaWNvbnMgYWN0dWFsbHkgdXNlZCBpbiB0aGUgcHJvamVjdCAqLwouYmktaW5zdGFncmFtOjpiZWZvcmUgeyBjb250ZW50OiAiXGYzNTMiOyB9Ci5iaS10aWt0b2s6OmJlZm9yZSB7IGNvbnRlbnQ6ICJcZjRlNyI7IH0KLmJpLXR3aXR0ZXIteDo6YmVmb3JlIHsgY29udGVudDogIlxmODZiIjsgfQouYmkteW91dHViZTo6YmVmb3JlIHsgY29udGVudDogIlxmMTk1IjsgfQo=" media="print" onload="this.media='all'">
+    <noscript></noscript>
+    <script type="module" crossorigin src="./assets/index-BTGp9KUM.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CQckIPO-.css">
   </head>
   <body>
     <div id="root"></div>
