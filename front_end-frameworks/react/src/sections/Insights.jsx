@@ -4,16 +4,18 @@ import InsightCard from "../components/InsightCard.jsx";
 import getInsights from "../services/insightsService.js";
 
 export default function Insights() {
-  const [insights, setInsights] = React.useState(null);
-  const [errorMessage, setErrorMessage] = React.useState([]);
+  const [insights, setInsights] = React.useState([]);
+  const [errorMessage, setErrorMessage] = React.useState(null);
 
   React.useEffect(() => {
-    getInsights().then(setInsights).catch(setErrorMessage);
+    getInsights()
+      .then(setInsights)
+      .catch((err) => setError(err.message));
   }, []);
 
   if (errorMessage) return <div className="text-red-500">{errorMessage}</div>;
 
-  if (insights.length === 0) return null;
+  if (!insights || insights.length === 0) return null;
 
   return (
     <section id="insights-section" className="flex flex-col items-center py-24">
