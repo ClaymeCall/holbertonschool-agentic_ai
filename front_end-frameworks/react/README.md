@@ -1,16 +1,29 @@
-# React + Vite
+# Front-end frameworks - React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a website reproduced using React and Tailwind CSS, created in the context of Holberton Coding School. It demonstrates modern frontend development practices with a focus on component-based architecture and utility-first styling.
 
-Currently, two official plugins are available:
+Live Preview : https://claymecall.github.io/holbertonschool-agentic_ai/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **React**: A JavaScript library for building user interfaces with a component-based approach.
+- **Tailwind CSS**: A utility-first CSS framework for rapidly building custom designs.
+- **Vite**: A modern frontend build tool for faster and leaner development experience.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Project Structure
 
-## Expanding the ESLint configuration
+The project follows a structured approach to organize components, styles, and assets efficiently.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Style guide
+https://github.com/fchavonet/curriculum-holbertonschool-front_end-frameworks/blob/main/design/style-guide.md
+
+## Available Scripts
+
+- **`dev`**: Starts the Vite development server for local development.
+- **`build`**: Builds the project for production using Vite.
+- **`preview`**: Locally preview the production build.
+- **`deploy`**: Builds the project and deploys it using `gh-pages`.
+- **`lint`**: Runs ESLint to check for code issues.
+- **`fix`**: Automatically fixes ESLint issues where possible.
+- **`format`**: Formats code using Prettier with Tailwind CSS plugin support.
+- **`quality`**: Runs both `fix` and `format` for comprehensive code quality checks.
