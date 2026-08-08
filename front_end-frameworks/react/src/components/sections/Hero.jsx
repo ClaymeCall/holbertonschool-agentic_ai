@@ -19,24 +19,24 @@ export default function Hero() {
     >
        <CoolBackground />
 
-       <div className="mx-auto flex max-w-6xl flex-col items-center px-6">
-         <SectionBadge>The future of AI</SectionBadge>
-         <hgroup className="mb-10 flex flex-col items-center">
-           <SectionTitle level="h1" type="big" text1="Build smarter workflows" text2="with Agentic AI" className="mb-10" />
-          <p className="w-8/10 text-center">
-            Create autonomous AI agents that think, plan and execute complex
-            tasks. Transform your business with intelligent automation.
-          </p>
-        </hgroup>
-         <div className="mb-15 flex flex-col items-center justify-center gap-4 md:flex-row">
-           <Button variant="primary">
-             Start learning with Holberton School
-           </Button>
-           <Button variant="secondary">
-             Methodology
-           </Button>
-         </div>
-         <dl className="grid w-full max-w-4xl grid-cols-2 gap-8 md:grid-cols-4">
+        <div className="mx-auto flex max-w-6xl flex-col items-center px-6 gap-8">
+          <SectionBadge>The future of AI</SectionBadge>
+          <hgroup className="flex flex-col items-center">
+            <SectionTitle level="h1" type="big" text1="Build smarter workflows" text2="with Agentic AI" className="mb-8" />
+           <p className="w-8/10 text-center">
+             Create autonomous AI agents that think, plan and execute complex
+             tasks. Transform your business with intelligent automation.
+           </p>
+         </hgroup>
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 md:flex-row">
+            <Button variant="primary">
+              Start learning with Holberton School
+            </Button>
+            <Button variant="secondary">
+              Methodology
+            </Button>
+          </div>
+          <dl className="mt-8 grid w-full max-w-4xl grid-cols-2 gap-8 md:grid-cols-4">
            {stats.map(({ stat, value }) => (
              <StatCard key={stat} stat={stat} value={value} />
            ))}

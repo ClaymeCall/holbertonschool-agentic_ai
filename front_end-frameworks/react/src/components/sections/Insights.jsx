@@ -19,13 +19,13 @@ export default function Insights() {
   if (!insights || insights.length === 0) return null;
 
   return (
-    <section id="insights-section" className="flex flex-col items-center py-24">
-       <div className="mx-auto max-w-6xl px-6">
-          <SectionBadge>Insights</SectionBadge>
+     <section id="insights-section" className="flex flex-col items-center pb-24">
+       <div className="mx-auto max-w-6xl px-6 flex flex-col items-center gap-8">
+           <SectionBadge>Insights</SectionBadge>
 
-          <SectionTitle level="h2" text1="Explore Agentic AI" text2="Through real-world scenes" className="mb-24" />
+           <SectionTitle level="h2" text1="Explore Agentic AI" text2="Through real-world scenes" />
 
-        <div className="grid place-items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
+         <div className="mt-12 grid place-items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {insights.map((insight, index) => (
             <InsightCard
               index={index}
