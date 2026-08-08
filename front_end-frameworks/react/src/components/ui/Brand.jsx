@@ -1,6 +1,6 @@
 import { BrainCircuit } from "lucide-react";
 
-export default function Logo() {
+export default function Brand() {
   return (
     <a href="#top" className="flex items-center gap-2">
       <div className="flex h-7 w-7 flex-row items-center justify-center rounded-lg bg-violet-500 text-xs font-black shadow-lg shadow-violet-500/40">

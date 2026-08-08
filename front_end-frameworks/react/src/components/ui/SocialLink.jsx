@@ -5,7 +5,7 @@ function SocialLink({ href, label, children }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
-            className="flex items-center justify-center w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors"
+            className="flex items-center justify-center size-8 rounded-lg bg-black border border-slate-800 hover:bg-slate-800 transition-colors"
         >
             {children}
         </a>

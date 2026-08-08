@@ -1,17 +1,15 @@
-import Eyebrow from "../components/Eyebrow.jsx";
-import steps from "../data/steps.js";
+import SectionBadge from "../ui/SectionBadge.jsx";
+import SectionTitle from "../ui/SectionTitle.jsx";
+import steps from "../../data/steps.js";
 
 export default function About() {
   return (
     <section id="about-section" className="flex flex-col items-center py-24">
-      <div className="mx-auto max-w-6xl px-6">
-        <Eyebrow>What is Agentic AI?</Eyebrow>
+       <div className="mx-auto max-w-6xl px-6">
+         <SectionBadge>What is Agentic AI?</SectionBadge>
 
-        <hgroup className="mb-10 flex flex-col items-center">
-          <h2 className="mb-10 text-center text-4xl leading-none font-black tracking-tight md:text-5xl">
-            <p className="text-slate-50">AI that does more than answer</p>
-            <p className="text-violet-300">It acts with purpose</p>
-          </h2>
+          <hgroup className="mb-10 flex flex-col items-center">
+            <SectionTitle level="h2" text1="AI that does more than answer" text2="It acts with purpose" className="mb-10" />
           <p className="w-8/10 max-w-2xl pb-8">
             Agentic AI refers to artificial intelligence systems designed to
             pursue goals, make decisions, use tools, and adapt their actions

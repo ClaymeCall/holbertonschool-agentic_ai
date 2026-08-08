@@ -1,4 +1,5 @@
-import Logo from "./Logo.jsx";
+import Brand from "../ui/Brand.jsx";
+import Button from "../ui/Button.jsx";
 
 export default function Header() {
   const navLinks = [
@@ -11,7 +12,7 @@ export default function Header() {
   return (
     <header className="fixed z-1000 flex w-full bg-slate-950 px-5 py-3">
       <div className="mx-auto flex w-full max-w-6xl justify-between px-6">
-        <Logo />
+        <Brand />
         <nav className="flex items-center gap-4 text-xs">
           <div className="hidden text-slate-500 md:flex">
             {navLinks.map(({ href, label }) => (
@@ -24,12 +25,7 @@ export default function Header() {
               </a>
             ))}
           </div>
-          <a
-            href=""
-            className="rounded-md bg-violet-500 px-4 py-2 font-semibold shadow-lg shadow-violet-500/40 hover:bg-violet-600"
-          >
-            Enroll now
-          </a>
+           <Button variant="primary">Enroll now</Button>
         </nav>
       </div>
     </header>

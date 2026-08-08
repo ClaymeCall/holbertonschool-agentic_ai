@@ -1,17 +1,15 @@
-import Eyebrow from "../components/Eyebrow.jsx";
-import FeatureCard from "../components/FeatureCard.jsx";
-import features from "../data/features.js";
+import SectionBadge from "../ui/SectionBadge.jsx";
+import SectionTitle from "../ui/SectionTitle.jsx";
+import FeatureCard from "../cards/FeatureCard.jsx";
+import features from "../../data/features.js";
 
 export default function Features() {
   return (
     <section id="features-section" className="flex flex-col items-center pb-24">
-      <div className="mx-auto max-w-6xl px-6">
-        <Eyebrow>Features</Eyebrow>
+       <div className="mx-auto max-w-6xl px-6">
+          <SectionBadge>Features</SectionBadge>
 
-        <h2 className="mb-24 text-center text-4xl leading-none font-black tracking-tight md:text-5xl">
-          <p className="text-slate-50">Everything You Need to Build</p>
-          <p className="text-violet-300">With powerful AI agents</p>
-        </h2>
+          <SectionTitle level="h2" text1="Everything You Need to Build" text2="With powerful AI agents" className="mb-24" />
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
           {features.map((feature) => (

@@ -1,10 +1,10 @@
 import React from "react";
 import { User, AtSign, Mail } from "lucide-react";
-import Eyebrow from "../components/Eyebrow.jsx";
-import CoolBackground from "../components/CoolBackground.jsx";
-import CallToActionButton from "../components/buttons/CallToActionButton.jsx";
-import SecondaryButton from "../components/buttons/SecondaryButton.jsx";
-import Highlight from "../components/Highlight.jsx";
+import SectionBadge from "../ui/SectionBadge.jsx";
+import SectionTitle from "../ui/SectionTitle.jsx";
+import CoolBackground from "../ui/CoolBackground.jsx";
+import Button from "../ui/Button.jsx";
+import Highlight from "../ui/Highlight.jsx";
 
 function validateName(name) {
   return name.length >= 2;
@@ -64,18 +64,15 @@ export default function Contact() {
     >
       <CoolBackground />
 
-      <div className="mx-auto max-w-6xl px-6">
-        <Eyebrow>Start your AI journey</Eyebrow>
+       <div className="mx-auto max-w-6xl px-6">
+          <SectionBadge>Start your AI journey</SectionBadge>
 
-        <h2 className="mb-16 text-center text-4xl leading-none font-black tracking-tight sm:text-5xl md:text-7xl">
-          <p className="text-slate-50">Ready to Explore</p>
-          <p className="text-violet-300">Agentic AI?</p>
-        </h2>
+          <SectionTitle level="h2" type="big" text1="Ready to Explore" text2="Agentic AI?" className="mb-8" />
 
-        <div className="flex flex-col items-center justify-center gap-4 pb-8 sm:flex-row">
-          <CallToActionButton>Enroll at Holberton School</CallToActionButton>
-          <SecondaryButton>Need more information?</SecondaryButton>
-        </div>
+           <div className="flex flex-col items-center justify-center gap-4 pb-8 sm:flex-row">
+           <Button variant="primary">Enroll at Holberton School</Button>
+           <Button variant="secondary">Need more information?</Button>
+         </div>
 
         <div className="mb-18 flex flex-wrap items-center justify-center gap-8">
           <Highlight icon="FolderCode">Project-based learning </Highlight>
@@ -155,13 +152,13 @@ export default function Contact() {
               }`}
             />
           </div>
-          <button
-            type="submit"
-            disabled={!isFormValid || sendingState !== "Send message"}
-            className="w-full rounded-md bg-violet-500 px-4 py-2 font-semibold text-slate-50 shadow-lg shadow-violet-500/40 transition disabled:opacity-60"
-          >
-            {sendingState}
-          </button>
+           <button
+             type="submit"
+             disabled={!isFormValid || sendingState !== "Send message"}
+             className="w-full rounded-md bg-violet-500 px-4 py-2 font-semibold text-slate-50 shadow-lg shadow-violet-500/40 transition disabled:opacity-60 hover:bg-violet-600"
+           >
+             {sendingState}
+           </button>
           <p className="min-h-5 text-sm text-slate-500 transition">
             {feedbackMessage}
           </p>

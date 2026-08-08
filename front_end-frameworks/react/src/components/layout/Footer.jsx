@@ -1,6 +1,6 @@
-import Logo from "./Logo.jsx";
-import SocialLink from "./ui/SocialLink.jsx"
-import LinkList from "./ui/LinkList.jsx"
+import Brand from "../ui/Brand.jsx";
+import SocialLink from "../ui/SocialLink.jsx"
+import LinkList from "../ui/LinkList.jsx"
 
 export default function Footer() {
   const linkLists = [
@@ -36,11 +36,11 @@ export default function Footer() {
     <footer className="bg-black px-8 pb-24">
       <div className="max-w-6xl mx-auto pt-24 pb-12 flex flex-col md:grid md:grid-cols-5 gap-8">
         <div className="flex flex-col col-span-2 gap-4">
-          <Logo />
+          <Brand />
           <p className="text-xs text-slate-500">
             Explore the future of development with Agentic AI.
           </p>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <SocialLink href="https://www.instagram.com/holbertonfrance" label="Instagram">
               <i className="bi bi-instagram text-slate-300 text-base"></i>
             </SocialLink>
