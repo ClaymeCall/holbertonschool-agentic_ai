@@ -64,24 +64,29 @@ export default function Contact() {
     >
       <CoolBackground />
 
-      <div className="mx-auto max-w-6xl px-6 flex flex-col items-center gap-8">
-          <SectionBadge>Start your AI journey</SectionBadge>
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-6">
+        <SectionBadge>Start your AI journey</SectionBadge>
 
-          <SectionTitle level="h2" type="big" text1="Ready to Explore" text2="Agentic AI?" />
+        <SectionTitle
+          level="h2"
+          type="big"
+          text1="Ready to Explore"
+          text2="Agentic AI?"
+        />
 
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button variant="primary">Enroll at Holberton School</Button>
-            <Button variant="secondary">Need more information?</Button>
-          </div>
+        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Button variant="primary">Enroll at Holberton School</Button>
+          <Button variant="secondary">Need more information?</Button>
+        </div>
 
-         <div className="mt-8 flex flex-wrap items-center justify-center gap-8">
-           <Highlight icon="FolderCode">Project-based learning </Highlight>
-           <Highlight icon="Users">Peer learning environment</Highlight>
-           <Highlight icon="Sparkles">AI-powered workflows</Highlight>
-         </div>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-8">
+          <Highlight icon="FolderCode">Project-based learning </Highlight>
+          <Highlight icon="Users">Peer learning environment</Highlight>
+          <Highlight icon="Sparkles">AI-powered workflows</Highlight>
+        </div>
 
-         <form
-           className="mt-8 flex w-full max-w-2xl flex-col items-center justify-center gap-8 rounded-3xl border border-slate-800 bg-slate-950/80 p-8 text-start shadow-2xl shadow-slate-950/40 backdrop-blur"
+        <form
+          className="mt-8 flex w-full max-w-2xl flex-col items-center justify-center gap-8 rounded-3xl border border-slate-800 bg-slate-950/80 p-8 text-start shadow-2xl shadow-slate-950/40 backdrop-blur"
           onSubmit={handleFormSubmit}
         >
           <div className="flex w-full flex-col items-start gap-2">
@@ -152,13 +157,13 @@ export default function Contact() {
               }`}
             />
           </div>
-           <button
-             type="submit"
-             disabled={!isFormValid || sendingState !== "Send message"}
-             className="w-full rounded-md bg-violet-500 px-4 py-2 font-semibold text-slate-50 shadow-lg shadow-violet-500/40 transition disabled:opacity-60 hover:bg-violet-600"
-           >
-             {sendingState}
-           </button>
+          <button
+            type="submit"
+            disabled={!isFormValid || sendingState !== "Send message"}
+            className="w-full rounded-md bg-violet-500 px-4 py-2 font-semibold text-slate-50 shadow-lg shadow-violet-500/40 transition hover:bg-violet-600 disabled:opacity-60"
+          >
+            {sendingState}
+          </button>
           <p className="min-h-5 text-sm text-slate-500 transition">
             {feedbackMessage}
           </p>

@@ -5,11 +5,15 @@ import steps from "../../data/steps.js";
 export default function About() {
   return (
     <section id="about-section" className="flex flex-col items-center py-24">
-      <div className="mx-auto max-w-6xl px-6 flex flex-col items-center gap-8">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-6">
         <SectionBadge>What is Agentic AI?</SectionBadge>
 
-        <hgroup className="flex flex-col gap-8 items-center">
-          <SectionTitle level="h2" text1="AI that does more than answer" text2="It acts with purpose" />
+        <hgroup className="flex flex-col items-center gap-8">
+          <SectionTitle
+            level="h2"
+            text1="AI that does more than answer"
+            text2="It acts with purpose"
+          />
           <p className="w-8/10 max-w-2xl text-start">
             Agentic AI refers to artificial intelligence systems designed to
             pursue goals, make decisions, use tools, and adapt their actions
@@ -35,8 +39,8 @@ export default function About() {
                 Agentic AI
               </dt>
               <dd className="text-sm text-slate-500">
-                Understands a goal, chooses actions, uses external tools, follows
-                a plan, and adjusts its behaviour based on feedback.
+                Understands a goal, chooses actions, uses external tools,
+                follows a plan, and adjusts its behaviour based on feedback.
               </dd>
             </dl>
           </div>

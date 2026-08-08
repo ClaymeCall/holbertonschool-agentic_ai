@@ -11,17 +11,17 @@ function selectIcon(icon) {
   const styling = "size-5";
   switch (icon) {
     case "Bot":
-      return <Bot className={styling}/>;
+      return <Bot className={styling} />;
     case "Brain":
-      return <Brain className={styling}/>;
+      return <Brain className={styling} />;
     case "ShieldCheck":
-      return <ShieldCheck className={styling}/>;
+      return <ShieldCheck className={styling} />;
     case "Wrench":
-      return <Wrench className={styling}/>;
+      return <Wrench className={styling} />;
     case "Database":
-      return <Database className={styling}/>;
+      return <Database className={styling} />;
     case "Workflow":
-      return <Workflow className={styling}/>;
+      return <Workflow className={styling} />;
     default:
       return null;
   }
@@ -39,7 +39,7 @@ export default function FeatureCard({
       </div>
       <h3 className="mb-2 font-bold">{title}</h3>
 
-      <p className="text-slate-500 text-sm">{description}</p>
+      <p className="text-sm text-slate-500">{description}</p>
     </article>
   );
 }

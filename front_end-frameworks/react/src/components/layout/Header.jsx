@@ -25,7 +25,7 @@ export default function Header() {
               </a>
             ))}
           </div>
-           <Button variant="primary">Enroll now</Button>
+          <Button variant="primary">Enroll now</Button>
         </nav>
       </div>
     </header>

@@ -1,4 +1,10 @@
-export default function SectionTitle({ level = "h2", type = "normal", text1 = "Text 1", text2 = "Text2", className = "" }) {
+export default function SectionTitle({
+  level = "h2",
+  type = "normal",
+  text1 = "Text 1",
+  text2 = "Text2",
+  className = "",
+}) {
   let size;
   switch (type) {
     case "big":
@@ -13,7 +19,9 @@ export default function SectionTitle({ level = "h2", type = "normal", text1 = "T
   const LevelTag = level;
 
   return (
-    <LevelTag className={`text-center leading-none font-black tracking-tight ${size} ${className}`}>
+    <LevelTag
+      className={`text-center leading-none font-black tracking-tight ${size} ${className}`}
+    >
       <p className="text-slate-50">{text1}</p>
       <p className="text-violet-300">{text2}</p>
     </LevelTag>
