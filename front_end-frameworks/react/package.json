@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://claymecall.github.io/holbertonschool-agentic_ai/front_end-frameworks/react/",
   "scripts": {
     "build": "vite build",
-    "deploy": "npm run build && gh-pages -d dist",
+    "deploy": "npm run build && gh-pages -d dist --dest front_end-frameworks/react --add",
     "dev": "vite",
     "fix": "eslint . --fix",
     "format": "prettier --write ./src/**/*.{js,jsx}",

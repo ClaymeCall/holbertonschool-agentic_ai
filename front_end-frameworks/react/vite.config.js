@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "./",
+  base: '/holbertonschool-agentic_ai/front_end-frameworks/react/',
   plugins: [
     react(),
     tailwindcss(),
