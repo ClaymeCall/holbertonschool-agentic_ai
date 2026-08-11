@@ -20,7 +20,7 @@ export default function Hero() {
       <CoolBackground />
 
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-6">
-        <SectionBadge>The future of AI</SectionBadge>
+        <SectionBadge>The future of coding</SectionBadge>
         <hgroup className="flex flex-col items-center">
           <SectionTitle
             level="h1"

@@ -21,7 +21,7 @@ const stats = [
     <CoolBackground />
 
     <div class="mx-auto flex max-w-6xl flex-col items-center gap-8 px-6">
-      <SectionBadge>The future of AI</SectionBadge>
+      <SectionBadge>The future of coding</SectionBadge>
       <hgroup class="flex flex-col items-center">
         <SectionTitle
           level="h1"
