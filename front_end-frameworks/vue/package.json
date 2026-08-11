@@ -1,0 +1,42 @@
+{
+  "name": "vue",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "homepage": "https://claymecall.github.io/holbertonschool-agentic_ai/front_end-frameworks/vue/",
+  "scripts": {
+    "build": "vite build",
+    "deploy": "npm run build && gh-pages -d dist --dest front_end-frameworks/vue --add",
+    "dev": "vite",
+    "fix": "eslint . --fix",
+    "format": "prettier --write ./src/**/*.{js,vue}",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "quality": "npm run fix && npm run format"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
+  },
+  "dependencies": {
+    "@babel/eslint-parser": "^8.0.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "bootstrap-icons": "^1.13.1",
+    "lucide-vue-next": "^1.0.0",
+    "tailwindcss": "^4.3.3",
+    "vue": "^3.5.40",
+    "vue-eslint-parser": "^10.4.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "eslint": "^10.8.1",
+    "eslint-plugin-vue": "^10.10.0",
+    "gh-pages": "^6.3.0",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "vite": "^8.2.0"
+  }
+}
