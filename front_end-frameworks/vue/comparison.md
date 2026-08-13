@@ -561,8 +561,7 @@ vue/
     │   │   ├── About.vue
     │   │   ├── Features.vue
     │   │   ├── Insights.vue
-    │   │   ├── Contact.vue
-    │   │   └── TestSection.vue
+    │   │   └── Contact.vue
     │   ├── ui/
     │   │   ├── Brand.vue
     │   │   ├── Button.vue
@@ -600,4 +599,3 @@ vue/
 - Vue has `App.vue` and `main.js` entry files
 - React uses `className` for CSS classes
 - Vue uses `class` for CSS classes
-- Vue project has a `TestSection.vue` component not present in React

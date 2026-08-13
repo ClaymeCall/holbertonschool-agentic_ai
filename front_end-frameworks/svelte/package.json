@@ -1,0 +1,42 @@
+{
+  "name": "svelte",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "homepage": "https://claymecall.github.io/holbertonschool-agentic_ai/front_end-frameworks/svelte/",
+  "scripts": {
+    "build": "vite build",
+    "deploy": "npm run build && gh-pages -d dist --dest front_end-frameworks/svelte --add",
+    "dev": "vite",
+    "fix": "eslint . --fix",
+    "format": "prettier --write ./src/**/*.{js,svelte}",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "quality": "npm run fix && npm run format"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-tailwindcss",
+      "prettier-plugin-svelte"
+    ]
+  },
+  "dependencies": {
+    "@lucide/svelte": "^0.537.0",
+    "lucide-svelte": "^1.0.1",
+    "svelte": "^5.56.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "eslint": "^10.8.1",
+    "eslint-plugin-svelte": "^3.3.0",
+    "gh-pages": "^6.3.0",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-svelte": "^4.1.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.2.0"
+  }
+}
