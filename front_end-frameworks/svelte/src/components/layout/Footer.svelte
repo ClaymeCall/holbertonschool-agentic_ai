@@ -43,7 +43,9 @@
 </script>
 
 <footer class="bg-black px-8 pb-24">
-  <div class="mx-auto flex max-w-6xl flex-col gap-8 pt-24 pb-12 md:grid md:grid-cols-5">
+  <div
+    class="mx-auto flex max-w-6xl flex-col gap-8 pt-24 pb-12 md:grid md:grid-cols-5"
+  >
     <div class="col-span-2 flex flex-col gap-4">
       <Brand />
       <p class="text-xs text-slate-500">
@@ -78,7 +80,9 @@
     {/each}
   </div>
   <hr class="my-6 text-slate-900" />
-  <div class="flex flex-col justify-between gap-4 text-xs text-slate-500 sm:flex-row">
+  <div
+    class="flex flex-col justify-between gap-4 text-xs text-slate-500 sm:flex-row"
+  >
     <p>© 2026 Clément Callejon</p>
 
     <p>Built for the Holberton School Front-end Framework curriculum.</p>

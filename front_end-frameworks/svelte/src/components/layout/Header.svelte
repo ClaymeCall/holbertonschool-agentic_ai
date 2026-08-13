@@ -16,10 +16,7 @@
     <nav class="flex items-center gap-4 text-xs">
       <div class="hidden text-slate-500 md:flex">
         {#each navLinks as { href, label }, i (i)}
-          <a
-            class="rounded-md px-4 py-2 hover:text-slate-50"
-            href={href}
-          >
+          <a class="rounded-md px-4 py-2 hover:text-slate-50" {href}>
             {label}
           </a>
         {/each}

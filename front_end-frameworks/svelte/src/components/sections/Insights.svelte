@@ -4,10 +4,10 @@
   import InsightCard from "../cards/InsightCard.svelte";
   import getInsights from "../../services/insightsService.js";
   import { onMount } from "svelte";
-  
+
   let insights = [];
   let errorMessage = null;
-  
+
   onMount(async () => {
     try {
       insights = await getInsights();
@@ -30,7 +30,9 @@
         text2="Through real-world scenes"
       />
 
-      <div class="mt-12 grid place-items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div
+        class="mt-12 grid place-items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3"
+      >
         {#each insights as insight, i (i)}
           <InsightCard
             category={insight.category}

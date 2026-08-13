@@ -6,7 +6,7 @@
 <a
   class="flex size-8 items-center justify-center rounded-lg border border-slate-800 bg-black transition-colors hover:bg-slate-800"
   aria-label={label}
-  href={href}
+  {href}
   rel="noopener noreferrer"
   target="_blank"
 >

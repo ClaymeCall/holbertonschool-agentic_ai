@@ -21,7 +21,10 @@
 
 <div class="flex gap-2">
   {#if IconComponent}
-    <svelte:component this={IconComponent} class="m-auto size-4 stroke-violet-500" />
+    <svelte:component
+      this={IconComponent}
+      class="m-auto size-4 stroke-violet-500"
+    />
   {/if}
   <p class="text-sm text-slate-500"><slot /></p>
 </div>

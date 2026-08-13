@@ -25,15 +25,15 @@
       validateMessage(messageValue)
     );
   }
-  
+
   let nameValue = "";
   let emailValue = "";
   let messageValue = "";
   let sendingState = "Send message";
   let feedbackMessage = "Please fill all required fields.";
-  
+
   $: isFormValid = validateForm(nameValue, emailValue, messageValue);
-  
+
   function handleFormSubmit(submitEvent) {
     submitEvent.preventDefault();
     sendingState = "Sending...";
@@ -48,7 +48,7 @@
       feedbackMessage = "Your message has been sent successfully.";
 
       setTimeout(
-        () => feedbackMessage = "Please fill all required fields.",
+        () => (feedbackMessage = "Please fill all required fields."),
         5000,
       );
     }, 3000);
@@ -71,16 +71,18 @@
       type="big"
     />
 
-    <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+    <div
+      class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
+    >
       <Button variant="primary">Enroll at Holberton School</Button>
       <Button variant="secondary">Need more information?</Button>
     </div>
 
-     <div class="mt-8 flex flex-wrap items-center justify-center gap-8">
-       <Highlight icon="FolderCode">Project-based learning</Highlight>
-       <Highlight icon="Users">Peer learning environment</Highlight>
-       <Highlight icon="Sparkles">AI-powered workflows</Highlight>
-     </div>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-8">
+      <Highlight icon="FolderCode">Project-based learning</Highlight>
+      <Highlight icon="Users">Peer learning environment</Highlight>
+      <Highlight icon="Sparkles">AI-powered workflows</Highlight>
+    </div>
 
     <form
       class="mt-8 flex w-full max-w-2xl flex-col items-center justify-center gap-8 rounded-3xl border border-slate-800 bg-slate-950/80 p-8 text-start shadow-2xl shadow-slate-950/40 backdrop-blur"
@@ -142,8 +144,7 @@
           autoComplete="off"
           placeholder="Tell us about you projects or learning goals!"
           required
-          bind:value={messageValue}
-        ></textarea>
+          bind:value={messageValue}></textarea>
       </div>
       <button
         class="w-full rounded-md bg-violet-500 px-4 py-2 font-semibold text-slate-50 shadow-lg shadow-violet-500/40 transition hover:bg-violet-600 disabled:opacity-60"

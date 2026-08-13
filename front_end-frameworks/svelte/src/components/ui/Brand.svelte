@@ -1,5 +1,5 @@
 <script>
-  import { BrainCircuit } from 'lucide-svelte';
+  import { BrainCircuit } from "lucide-svelte";
 </script>
 
 <a class="flex items-center gap-2" href="#top">

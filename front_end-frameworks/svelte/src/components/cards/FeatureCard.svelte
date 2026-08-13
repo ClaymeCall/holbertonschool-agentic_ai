@@ -36,8 +36,12 @@
   const IconComponent = selectIcon(icon);
 </script>
 
-<article class="rounded-3xl border border-slate-800 bg-slate-950 p-8 shadow-xl shadow-slate-950/40">
-  <div class="mb-5 flex size-8 items-center justify-center rounded-lg bg-violet-500 shadow-lg shadow-violet-500/40">
+<article
+  class="rounded-3xl border border-slate-800 bg-slate-950 p-8 shadow-xl shadow-slate-950/40"
+>
+  <div
+    class="mb-5 flex size-8 items-center justify-center rounded-lg bg-violet-500 shadow-lg shadow-violet-500/40"
+  >
     {#if IconComponent}
       <svelte:component this={IconComponent} class={styling} />
     {/if}

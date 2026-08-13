@@ -4,7 +4,7 @@
   import SectionTitle from "../ui/SectionTitle.svelte";
   import Button from "../ui/Button.svelte";
   import StatCard from "../cards/StatCard.svelte";
-  
+
   const stats = [
     { stat: "Active agents", value: "10K+" },
     { stat: "Uptime", value: "99.9%" },
@@ -30,11 +30,13 @@
         type="big"
       />
       <p class="w-8/10 text-center">
-        Create autonomous AI agents that think, plan and execute complex
-        tasks. Transform your business with intelligent automation.
+        Create autonomous AI agents that think, plan and execute complex tasks.
+        Transform your business with intelligent automation.
       </p>
     </hgroup>
-    <div class="mt-8 flex flex-col items-center justify-center gap-4 md:flex-row">
+    <div
+      class="mt-8 flex flex-col items-center justify-center gap-4 md:flex-row"
+    >
       <Button href="#" variant="primary">
         Start learning with Holberton School
       </Button>
@@ -42,7 +44,7 @@
     </div>
     <dl class="mt-8 grid w-full max-w-4xl grid-cols-2 gap-8 md:grid-cols-4">
       {#each stats as { stat, value }, i (i)}
-        <StatCard stat={stat} value={value} />
+        <StatCard {stat} {value} />
       {/each}
     </dl>
   </div>
