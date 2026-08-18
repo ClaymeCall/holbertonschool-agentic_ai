@@ -148,11 +148,11 @@ docker logs stupefied_kepler
 ### Stop and remove the container
 
 ```bash
-docker kill stupefied_kepler
+docker stop stupefied_kepler
 docker rm stupefied_kepler
 ```
 
 ## 3 Observations
-- `docker run` auto-pulls an image I don't already have on my system
-- `docker kill` just kills the process but doesn't delete the container
-- Docker automatically generates a slug for containers if a name wasn't specified
+- `docker run` auto-pulls an image I don't already have on my system.
+- `docker stop` gracefully shuts down the container, `docker kill` just kills the process. Both doesn't delete the container.
+- Docker automatically generates a slug for containers if a name wasn't specified.
