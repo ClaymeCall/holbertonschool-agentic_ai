@@ -1,22 +1,25 @@
-# Dockerized Svelte App
+# Dockerized Node.js App
 
-This project is a Dockerized Svelte application.
+This project is a tiny Dockerized Node.js web app.
 
 ## Build and Run with Docker
 
 ### Build the Docker image
 ```sh
- docker build -t svelte-app .
+ docker build -t node-app .
 ```
 
 ### Run the container
 ```sh
- docker run -p 4173:4173 svelte-app
+ docker run -p 3000:3000 node-app
 ```
 
 ### Verify the app
 ```sh
-curl http://localhost:4173
+curl http://localhost:3000
 ```
 
-The app should return HTML content with a "Svelte" welcome page.
+The app should return:
+```
+Hello from Node.js!
+```
