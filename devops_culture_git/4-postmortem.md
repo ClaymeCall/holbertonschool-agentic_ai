@@ -36,9 +36,10 @@ over a weekend, and a chunk of lost revenue.
 
 | **Time**               | **Event**                                                                                     | **Status**  |
 |------------------------|---------------------------------------------------------------------------------------------|-------------|
+| Friday, 5:40 pm        | Karim starts deploying a fix for the checkout page manually via SSH.                        | Occurred    |
 | Friday, 5:52 pm        | Karim introduces a typo in the database URL configuration file.                            | Occurred    |
-| Friday, 6:05 pm        | Karim leaves for the weekend. No monitoring or alerting in place.                           | Undetected |
-| Friday, 8:30 pm        | Customer reports checkout failure on social media. Team remains unaware.                  | Undetected    |
+| Friday, 6:05 pm        | Karim leaves for the weekend. No monitoring or alerting in place.                           | Occurred    |
+| Friday, 8:30 pm        | Customer reports checkout failure on social media. Team remains unaware.                  | Detected    |
 | Saturday, 9:15 am      | Inès discovers the issue but lacks server access and deployment records.                   | Detected    |
 | Saturday, 11:40 am     | Service restored after Karim fixes the typo manually. Total downtime: ~15 hours.          | Resolved    |
 
@@ -55,14 +56,25 @@ over a weekend, and a chunk of lost revenue.
 
 ## Priority Actions
 
-### 1. **Introduce a CI/CD Pipeline with Automated Testing**
-   - **Justification**: Manual deployments and lack of testing led to the typo being deployed. A CI/CD pipeline with automated tests (including configuration validation) would catch errors before production. This reduces deployment failures and improves reliability.
-   - **DORA Metric Impacted**: **Change Failure Rate** (and **Change lead time**).
+### 1. **Implement Automated Alerting and Monitoring**
+   - **Justification**: The incident was detected late (14.5 hours after occurrence) due to reliance on social media reports. Automated alerts would enable immediate detection of outages, reducing mean time to detection (MTTD).
+   - **DORA Metric Impacted**: **Mean Time to Detection (MTTD)**.
 
-### 2. **Implement Automated Alerting and Monitoring**
-   - **Justification**: The incident was detected late (14.5 hours after occurrence) due to reliance on social media reports. Automated alerts would enable immediate detection of outages.
-   - **DORA Metric Impacted**: **Time to restore service**.
+### 2. **Introduce a CI/CD Pipeline with Automated Testing**
+   - **Justification**: Manual deployments and lack of testing led to the typo being deployed. A CI/CD pipeline with automated tests (including configuration validation) would catch errors before production. This reduces deployment failures and improves reliability.
+   - **DORA Metric Impacted**: **Deployment Frequency** and **Change Failure Rate**.
 
 ### 3. **Establish a Rollback and Deployment Tracking System**
    - **Justification**: The lack of deployment records and rollback mechanisms delayed resolution. Implementing version-controlled deployments (e.g., Git-based) and a rollback system would enable quick recovery from failures.
-   - **DORA Metric Impacted**: **Time to restore service**.
+   - **DORA Metric Impacted**: **Mean Time to Recovery (MTTR)**.
+
+
+## DORA Metrics Degraded by Each Problem
+
+| **Problem**                                      | **DORA Metric Impacted**               |
+|--------------------------------------------------|---------------------------------------|
+| Manual deployment with human error (typo)        | Change Failure Rate                    |
+| Lack of testing environment                      | Change Failure Rate                    |
+| No automated alerting                             | Mean Time to Detection (MTTD)         |
+| No deployment records or rollback mechanism       | Mean Time to Recovery (MTTR)          |
+| Limited access and knowledge sharing              | Mean Time to Recovery (MTTR)          |
