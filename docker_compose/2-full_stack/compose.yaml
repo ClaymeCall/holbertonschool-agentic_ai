@@ -1,0 +1,71 @@
+services:
+
+   db:
+     build: ./db
+     env_file: ./db/.env
+     ports:
+       - "5432:5432"
+     volumes:
+       - db_data:/var/lib/postgresql/data
+     networks:
+       - app_network
+     healthcheck:
+       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+       interval: 10s
+       retries: 5
+       start_period: 30s
+       timeout: 10s
+
+   cache:
+     build: ./cache
+     env_file: ./cache/.env
+     ports:
+       - "6379:6379"
+     volumes:
+       - redis_data:/data
+     restart: unless-stopped
+     healthcheck:
+       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+       interval: 10s
+       retries: 5
+       start_period: 30s
+       timeout: 10s
+     networks:
+       - app_network
+
+   api:
+     build: ./api
+     env_file: ./api/.env
+     depends_on:
+       db:
+         condition: service_healthy
+         restart: true
+       cache:
+         condition: service_healthy
+     networks:
+       - app_network
+
+   frontend:
+     build: ./frontend
+     depends_on:
+       - api
+     networks:
+       - app_network
+
+   reverse_proxy:
+     build: ./reverse_proxy
+     depends_on:
+       - api
+       - frontend
+     ports:
+       - "8080:80"
+     networks:
+       - app_network
+
+networks:
+   app_network:
+     driver: bridge
+
+volumes:
+   db_data:
+   redis_data:
