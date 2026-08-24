@@ -1,6 +1,7 @@
 ## Run the container
 
 ```sh
+cd 0-persist_data/
 docker compose up --build
 ```
 

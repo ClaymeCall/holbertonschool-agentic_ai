@@ -1,0 +1,16 @@
+services:
+  api:
+    build: ./api
+    networks:
+      - custom-network
+
+  web:
+    build: ./web
+    networks:
+      - custom-network
+    depends_on:
+      - api
+
+networks:
+   custom-network:
+     driver: bridge
