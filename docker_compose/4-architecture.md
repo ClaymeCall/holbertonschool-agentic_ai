@@ -33,6 +33,5 @@
 - 5432 (db, direct access)
 - 6379 (cache, direct access)
 
-
 ## Diagram
 ![Diagram](./architecture_diagram.png)
