@@ -2,9 +2,9 @@ FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-RUN addgroup app && adduser -S -G app app
-RUN chown app:app /usr/src/app
-USER app
+RUN addgroup app \
+    adduser -S -G app app \
+    chown app:app /usr/src/app
 
 COPY package*.json ./
 RUN npm install
