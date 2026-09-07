@@ -13,6 +13,10 @@ class UserRepository {
     findByEmail(email) {
         return this.db.get(email) || null;
     }
+
+    findAll() {
+        return Array.from(this.db.values());
+    }
 }
 
 module.exports = new UserRepository();
