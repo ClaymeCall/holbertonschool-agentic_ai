@@ -1,10 +1,13 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // 1. Initialisation du Serveur
 const server = new Server(
-  { name: "crm-mock-server", version: "1.0.0" },
+  { name: "sentinel-mcp-server", version: "1.0.0" },
   { capabilities: { tools: {} } }
 );
 
@@ -30,22 +33,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 // 3. Exécution de la logique (Ce que Copilot peut faire)
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  if (request.params.name === "get_customer_status") {
-    const email = request.params.arguments.email;
-    const data = DATABASE[email];
-
-    if (!data) {
-      return {
-        content: [{ type: "text", text: `Erreur: Aucun client trouvé pour l'email ${email}` }],
-        isError: true,
-      };
-    }
-
-    return {
-      content: [{ type: "text", text: JSON.stringify(data, null, 2) }]
-    };
-  }
-
   if (request.params.name === "fetch_github_issues") {
     const { owner, repo } = request.params.arguments ?? {};
 
@@ -78,7 +65,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         headers: {
           Accept: "application/vnd.github+json",
           Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-          "X-GitHub-Api-Version": "2022-11-28"
+          "X-GitHub-Api-Version": "2026-03-10"
         }
       });
 
