@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "crm-server": {
+      "command": "/usr/bin/env",
+      "args": [
+        "node",
+        "/home/clement/Code/Holberton/holberton-agentic_ai/04_mcp/mcp_server.js"
+      ]
+    }
+  }
+}
