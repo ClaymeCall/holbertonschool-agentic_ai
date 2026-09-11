@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "sentinel-mcp-server": {
+      "command": "/usr/bin/env",
+      "args": [
+        "node",
+        "/home/clement/Code/Holberton/holberton-agentic_ai/05_sentinel/mcp_server.js"
+      ]
+    }
+  }
+}
