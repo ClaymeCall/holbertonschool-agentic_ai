@@ -70,7 +70,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       });
 
       if (!response.ok) {
-        throw new Error(`GitHub a répondu avec le statut ${response.status}.`);
+        const errorDetails = await response.json().catch(() => ({}));
+        throw new Error(
+          `GitHub a répondu avec le statut ${response.status}` +
+          (errorDetails.message ? `: ${errorDetails.message}` : "")
+        );
       }
 
       const issues = await response.json();
