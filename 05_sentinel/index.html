@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sentinel / VS Code issue watch</title>
+    <meta name="description" content="Dashboard de suivi des issues récentes de microsoft/vscode.">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Sentinel, accueil">
+          <span class="brand-mark" aria-hidden="true">S</span>
+          <span>sentinel<span class="brand-dot">.</span></span>
+        </a>
+        <div class="topbar-meta">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span>surveillance active</span>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <span class="mono">microsoft/vscode</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Issue intelligence / 12 sept. 2026</p>
+            <h1>Le signal récent<br><em>de VS Code.</em></h1>
+            <p class="hero-copy">Les cinq éléments les plus récents du dépôt, préparés pour une lecture rapide et une action immédiate.</p>
+          </div>
+          <a class="repo-link" href="https://github.com/microsoft/vscode/issues" target="_blank" rel="noreferrer">
+            <span class="repo-icon" aria-hidden="true">↗</span>
+            <span><strong>Ouvrir le dépôt</strong><small>github.com/microsoft/vscode</small></span>
+          </a>
+        </section>
+
+        <section class="stats" aria-label="Résumé des issues">
+          <article class="stat-card stat-primary">
+            <span class="stat-label">Éléments suivis</span>
+            <strong id="total-count">05</strong>
+            <span class="stat-note">dernière collecte</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Ouverts</span>
+            <strong id="open-count">04</strong>
+            <span class="stat-note accent-text">à traiter</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Pull requests</span>
+            <strong id="pr-count">03</strong>
+            <span class="stat-note">dans le flux</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Avec assigné</span>
+            <strong id="assigned-count">02</strong>
+            <span class="stat-note">responsabilité posée</span>
+          </article>
+        </section>
+
+        <section class="workspace" aria-labelledby="feed-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Flux entrant</p>
+              <h2 id="feed-title">Derniers changements</h2>
+            </div>
+            <span class="updated">Mis à jour à 14:40 UTC</span>
+          </div>
+
+          <div class="controls">
+            <label class="search-field">
+              <span aria-hidden="true">⌕</span>
+              <input id="search-input" type="search" placeholder="Rechercher un titre, auteur ou numéro" autocomplete="off">
+            </label>
+            <div class="filter-group" role="group" aria-label="Filtrer par état">
+              <button class="filter-button is-active" data-filter="all" type="button">Tout <span>05</span></button>
+              <button class="filter-button" data-filter="open" type="button">Ouvert <span>04</span></button>
+              <button class="filter-button" data-filter="closed" type="button">Fermé <span>01</span></button>
+            </div>
+            <label class="sort-field">
+              <span>Trier</span>
+              <select id="sort-select">
+                <option value="newest">Plus récent</option>
+                <option value="oldest">Plus ancien</option>
+                <option value="comments">Commentaires</option>
+              </select>
+            </label>
+          </div>
+
+          <div id="issue-list" class="issue-list" aria-live="polite"></div>
+          <p id="empty-state" class="empty-state" hidden>Aucun élément ne correspond à cette recherche.</p>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>Sentinel / collecte GitHub native</span>
+        <span class="mono">5 éléments · état: stable</span>
+      </footer>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
