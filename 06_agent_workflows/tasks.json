@@ -1,10 +1,5 @@
 [
-    {
-        "status": "pending",
-        "action": "Test de résilience"
-    },
-    {
-        "status": "completed",
-        "action": "Tâche terminée"
-    }
+  { "id": 1, "action": "sync_database", "status": "pending" },
+  { "id": 2, "action": "clear_cache", "status": "pending" },
+  { "id": 3, "action": "send_daily_reports", "status": "done" }
 ]

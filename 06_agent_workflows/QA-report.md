@@ -49,10 +49,13 @@
 
 | **Test** | **Commande** | **Statut** | **Remarques** |
 |----------|--------------|------------|---------------|
-| **Test de résilience** | Supprimer `tasks.json` et vérifier la gestion d'erreur | ⚠️ À tester | Le code gère désormais l'erreur `ENOENT` avec `winston` |
-| **Test de sécurité** | `docker scan` ou `trivy` | ⚠️ À exécuter | À faire après reconstruction de l'image |
-| **Test de performance** | Vérifier la taille de l'image | ⚠️ À vérifier | L'image doit faire **moins de 200 Mo** |
-| **Test de conformité** | `npm run lint` et `npm run typecheck` | ⚠️ Non applicable | Aucun script de lint/typecheck défini |
+| **Test de résilience** | Supprimer `tasks.json` et vérifier la gestion d'erreur | ✅ Validé | Le code gère l'erreur `ENOENT` et continue de fonctionner. |
+| **Test de corruption JSON** | Remplacer `tasks.json` par un JSON invalide | ✅ Validé | Le code détecte `SyntaxError` et continue de fonctionner. |
+| **Test d'illisibilité** | Changer les permissions de `tasks.json` (`chmod 000`) | ✅ Validé | Le code gère `EACCES` et continue de fonctionner. |
+| **Test de récupération** | Rétablir un `tasks.json` valide après corruption | ✅ Validé | Le code reprend normalement dès que le fichier est valide. |
+| **Test de sécurité** | `docker scan` ou `trivy` | ⚠️ Non exécuté | À faire manuellement (outils non installés). |
+| **Test de performance** | Vérifier la taille de l'image | ✅ Validé | Taille de l'image : **51.6 Mo** (inférieure à 200 Mo). |
+| **Test de conformité** | `npm run lint` et `npm run typecheck` | ⚠️ Non applicable | Aucun script de lint/typecheck défini.
 
 ---
 
