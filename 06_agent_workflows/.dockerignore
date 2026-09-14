@@ -1,0 +1,12 @@
+# .dockerignore
+# Fichiers à exclure de l'image Docker
+
+node_modules
+.git
+.gitignore
+.DS_Store
+.env
+*.md
+*.log
+docker-compose.yml
+Dockerfile

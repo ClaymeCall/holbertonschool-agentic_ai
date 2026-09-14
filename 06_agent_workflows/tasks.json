@@ -1,5 +1,12 @@
+# Exemple de fichier tasks.json
+# À monter en volume dans le conteneur pour les tests
 [
-  { "id": 1, "action": "sync_database", "status": "pending" },
-  { "id": 2, "action": "clear_cache", "status": "pending" },
-  { "id": 3, "action": "send_daily_reports", "status": "done" }
+  {
+    "action": "Exemple d'action",
+    "status": "pending"
+  },
+  {
+    "action": "Autre action",
+    "status": "completed"
+  }
 ]

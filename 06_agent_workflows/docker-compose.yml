@@ -1,0 +1,14 @@
+# docker-compose.yml
+# Orchestration du conteneur pour la surveillance des tâches
+
+version: '3.8'
+
+services:
+  task-monitor:
+    build: .
+    container_name: task-monitor
+    restart: unless-stopped
+    volumes:
+      - ./tasks.json:/app/tasks.json:ro
+    environment:
+      - NODE_ENV=production
