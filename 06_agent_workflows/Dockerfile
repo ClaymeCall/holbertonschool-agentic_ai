@@ -5,6 +5,10 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+# Mise à jour des dépendances système et nettoyage du cache
+RUN apk update && apk upgrade && \
+    rm -rf /var/cache/apk/*
+
 # Copie des fichiers nécessaires pour le build
 COPY package.json .
 COPY package-lock.json .
@@ -16,6 +20,10 @@ RUN npm ci --only=production
 FROM node:20-alpine
 WORKDIR /app
 
+# Mise à jour des dépendances système et nettoyage du cache
+RUN apk update && apk upgrade && \
+    rm -rf /var/cache/apk/*
+
 # Création d'un utilisateur non-root
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
@@ -23,6 +31,12 @@ USER appuser
 # Copie des artefacts depuis l'étape de build
 COPY --from=builder --chown=appuser:appgroup /app/node_modules ./node_modules
 COPY --chown=appuser:appgroup monitor.js .
+
+# Expose le port utilisé par l'application
+EXPOSE 3000
+
+# Variables d'environnement par défaut (optionnel)
+ENV TASKS_FILE=/app/tasks.json
 
 # Commande par défaut
 CMD ["node", "monitor.js"]

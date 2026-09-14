@@ -1,12 +1,10 @@
-# Exemple de fichier tasks.json
-# À monter en volume dans le conteneur pour les tests
 [
-  {
-    "action": "Exemple d'action",
-    "status": "pending"
-  },
-  {
-    "action": "Autre action",
-    "status": "completed"
-  }
+    {
+        "status": "pending",
+        "action": "Test de résilience"
+    },
+    {
+        "status": "completed",
+        "action": "Tâche terminée"
+    }
 ]

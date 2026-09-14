@@ -1,0 +1,15 @@
+{
+  "name": "agent-workflows",
+  "version": "1.0.0",
+  "description": "Surveillance des tâches en temps réel",
+  "main": "monitor.js",
+  "scripts": {
+    "start": "node monitor.js"
+  },
+  "dependencies": {
+    "winston": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

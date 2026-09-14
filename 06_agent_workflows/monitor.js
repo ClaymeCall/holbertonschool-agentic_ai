@@ -1,11 +1,30 @@
 // monitor.js
 // Script de surveillance des tâches en temps réel pour un fichier tasks.json
 
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
+const winston = require('winston');
+
+// Configuration du logger
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.printf(({ level, message, timestamp }) => {
+            return `[${timestamp}] ${level}: ${message}`;
+        })
+    ),
+    transports: [new winston.transports.Console()],
+});
+
+// Validation des variables d'environnement
+if (!process.env.TASKS_FILE) {
+    logger.error('La variable d\'environnement TASKS_FILE est requise.');
+    process.exit(1);
+}
 
 // Chemin du fichier tasks.json (monté en volume dans le conteneur)
-const TASKS_FILE = path.join(__dirname, 'tasks.json');
+const TASKS_FILE = process.env.TASKS_FILE;
 
 // Fonction pour formater la date au format [YYYY-MM-DD HH:MM:SS]
 const formatDate = () => {
@@ -20,34 +39,32 @@ const formatDate = () => {
 };
 
 // Fonction pour lire et analyser le fichier tasks.json
-const checkTasks = () => {
-    fs.readFile(TASKS_FILE, 'utf8', (err, data) => {
-        if (err) {
-            if (err.code === 'ENOENT') {
-                console.log(`${formatDate()} Erreur: Le fichier ${TASKS_FILE} est introuvable.`);
-            } else {
-                console.log(`${formatDate()} Erreur: Le fichier ${TASKS_FILE} est corrompu ou illisible.`);
-            }
-            return;
-        }
+const checkTasks = async () => {
+    try {
+        const data = await fs.readFile(TASKS_FILE, 'utf8');
+        const tasks = JSON.parse(data);
+        const pendingTask = tasks.find(task => task.status === 'pending');
 
-        try {
-            const tasks = JSON.parse(data);
-            const pendingTask = tasks.find(task => task.status === 'pending');
-
-            if (pendingTask) {
-                console.log(`${formatDate()} Action détectée: "${pendingTask.action}"`);
-            } else {
-                console.log(`${formatDate()} Aucune tâche en attente.`);
-            }
-        } catch (e) {
-            console.log(`${formatDate()} Erreur: Le fichier ${TASKS_FILE} n'est pas un JSON valide.`);
+        if (pendingTask && pendingTask.action) {
+            logger.info(`Action détectée: "${pendingTask.action}"`);
+        } else {
+            logger.info('Aucune tâche en attente.');
         }
-    });
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            logger.error(`Le fichier ${TASKS_FILE} est introuvable.`);
+        } else if (err instanceof SyntaxError) {
+            logger.error(`Le fichier ${TASKS_FILE} n'est pas un JSON valide.`);
+        } else {
+            logger.error(`Le fichier ${TASKS_FILE} est corrompu ou illisible.`);
+        }
+    }
 };
 
 // Vérification initiale
-checkTasks();
+checkTasks().catch(logger.error);
 
 // Surveillance périodique toutes les 5 secondes
-setInterval(checkTasks, 5000);
+setInterval(async () => {
+    await checkTasks();
+}, 5000);
