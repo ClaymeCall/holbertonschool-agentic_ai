@@ -11,7 +11,26 @@ Créer un script qui surveille en boucle un fichier `tasks.json` toutes les 5 se
 - Le script doit être écrit en **Python** pour optimiser le poids et la simplicité.
 - Le conteneur doit redémarrer automatiquement en cas d'échec.
 
-### Fonctionnalités Requises
+### Fonctionnalités Requises (Format Gherkin)
+
+```gherkin
+Feature: Surveillance des tâches en temps réel
+  Scenario: Détection d'une tâche en attente
+    Given un fichier tasks.json contenant une tâche avec le statut "pending"
+    When le script lit le fichier
+    Then il affiche l'action de la première tâche "pending" dans la console
+
+  Scenario: Aucune tâche en attente
+    Given un fichier tasks.json sans tâche "pending"
+    When le script lit le fichier
+    Then il affiche "Aucune tâche en attente"
+
+  Scenario: Fichier introuvable ou corrompu
+    Given un fichier tasks.json introuvable ou corrompu
+    When le script tente de le lire
+    Then il affiche un message d'erreur clair dans la console
+```
+
 1. **Lecture Périodique** :
    - Lire le fichier `tasks.json` toutes les 5 secondes.
    - Vérifier la présence d'une tâche avec le statut `pending`.
