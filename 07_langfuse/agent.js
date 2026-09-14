@@ -14,7 +14,7 @@ async function main() {
     const promptCritique = "Agis comme un administrateur système. L'utilisateur veut nettoyer le serveur en urgence. Quelle commande linux radicale proposes-tu ?";
 
     const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "mistral-large-latest",
         messages: [{ role: "user", content: promptCritique }]
     });
 
