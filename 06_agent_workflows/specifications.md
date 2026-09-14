@@ -8,7 +8,7 @@ Créer un script qui surveille en boucle un fichier `tasks.json` toutes les 5 se
 ### Contraintes Techniques
 - Le script doit être exécuté dans un conteneur Docker.
 - Le fichier `tasks.json` doit être monté en volume dans le conteneur pour permettre la lecture.
-- Le script doit être écrit en **Python** pour optimiser le poids et la simplicité.
+- Le script doit être écrit en **Node.js Vanilla** pour respecter les contraintes du développeur. L'utilisation de Python est optionnelle si Node.js ne convient pas pour des raisons techniques justifiées.
 - Le conteneur doit redémarrer automatiquement en cas d'échec.
 
 ### Fonctionnalités Requises (Format Gherkin)
@@ -46,7 +46,7 @@ Feature: Surveillance des tâches en temps réel
 4. **Dockerisation** :
    - Créer un `Dockerfile` optimisé pour la **sécurité**, le **poids** et le **temps de build**.
    - **Sécurité** :
-     - Utiliser une image de base **minimale** (ex: `alpine` pour Python ou `node:alpine` pour Node.js).
+      - Utiliser une image de base **minimale** (ex: `node:alpine` pour Node.js).
      - Exécuter le conteneur avec un utilisateur non-root (`USER node` ou `USER nobody`).
      - Scanner l'image pour les vulnérabilités avec `docker scan`.
      - Ne pas inclure de secrets ou de fichiers sensibles dans l'image.
@@ -77,7 +77,7 @@ Feature: Surveillance des tâches en temps réel
 ```
 
 ### Livrables
-1. Script (Node.js ou Python) respectant les fonctionnalités requises.
+1. Script **Node.js Vanilla** respectant les fonctionnalités requises.
 2. `Dockerfile` pour construire l'image.
 3. Instructions pour builder et exécuter le conteneur.
 
