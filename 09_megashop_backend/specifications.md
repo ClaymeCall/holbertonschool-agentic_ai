@@ -55,6 +55,14 @@ Ce document décrit les spécifications techniques et fonctionnelles pour l'impl
 
 ---
 
+## Exigences Fonctionnelles (Mise à Jour)
+### 4. Traitement Asynchrone
+- **Réponse immédiate** : Le webhook doit répondre avec un statut HTTP **200 (OK)** immédiatement après la réception de la notification, sans attendre la fin du traitement métier.
+- **File d'attente** : Les notifications valides doivent être placées dans une file d'attente pour un traitement asynchrone par un **service Worker** dédié.
+- **Validation synchrone** : Seule la validation des champs obligatoires et la vérification de la structure JSON sont effectuées de manière synchrone.
+
+---
+
 ## Exigences Techniques
 ### 1. Framework et Langage
 - **Langage** : JavaScript/TypeScript
@@ -72,8 +80,14 @@ Ce document décrit les spécifications techniques et fonctionnelles pour l'impl
   ```
 
 ### 4. Réponse HTTP
-- Répondre avec un statut **200 (OK)** pour toute notification valide.
+- Répondre avec un statut **200 (OK)** pour toute notification valide (après validation synchrone).
 - Répondre avec un statut **400 (Bad Request)** si le payload est invalide.
+
+### 5. Architecture Asynchrone
+- **Message Broker** : Utiliser **Redis** comme file d'attente pour le traitement asynchrone des notifications.
+- **Service Worker** : Développer un service **Worker** séparé pour consommer les notifications depuis la file d'attente Redis et effectuer les traitements métiers (ex: validation de la commande, mise à jour de la base de données).
+- **Conteneurisation** : Intégrer Redis dans le fichier `docker-compose.yml` pour une exécution locale et en environnement de développement.
+- **Communication** : Le webhook et le Worker communiquent via Redis (pub/sub ou liste FIFO).
 
 ---
 
