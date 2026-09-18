@@ -11,6 +11,11 @@ services:
       - redis_data:/data
     networks:
       - megashop_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   express_app:
     build: .
@@ -45,8 +50,10 @@ services:
       - ./package.json:/home/node/app/package.json:ro
     user: node
     depends_on:
-      - redis
-      - express_app
+      redis:
+        condition: service_healthy
+      express_app:
+        condition: service_started
     networks:
       - megashop_network
 
