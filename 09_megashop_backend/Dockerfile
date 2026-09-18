@@ -1,8 +1,8 @@
 # Utilise l'image officielle Node.js LTS
 FROM node:lts-slim
 
-# Crée un utilisateur non-root
-RUN useradd -m node
+# Crée un utilisateur non-root s'il n'existe pas
+RUN if ! id -u node > /dev/null 2>&1; then useradd -m node; fi
 
 # Définit le répertoire de travail
 WORKDIR /home/node/app

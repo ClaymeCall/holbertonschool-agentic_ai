@@ -1,11 +1,58 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  app:
-    build: .
-    user: "node"
+  redis:
+    image: redis:alpine
+    container_name: megashop_redis
     restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - megashop_network
+
+  express_app:
+    build: .
+    container_name: megashop_express
+    restart: unless-stopped
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - NODE_ENV=production
     ports:
       - "3000:3000"
     volumes:
       - ./server.js:/home/node/app/server.js:ro
+      - ./package.json:/home/node/app/package.json:ro
+    user: node
+    depends_on:
+      - redis
+    networks:
+      - megashop_network
+
+  worker:
+    build: .
+    container_name: megashop_worker
+    restart: unless-stopped
+    command: node worker.js
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - NODE_ENV=production
+    volumes:
+      - ./worker.js:/home/node/app/worker.js:ro
+      - ./package.json:/home/node/app/package.json:ro
+    user: node
+    depends_on:
+      - redis
+      - express_app
+    networks:
+      - megashop_network
+
+volumes:
+  redis_data:
+
+networks:
+  megashop_network:
+    driver: bridge
