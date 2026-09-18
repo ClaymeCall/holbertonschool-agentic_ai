@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    user: "node"
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server.js:/home/node/app/server.js:ro
