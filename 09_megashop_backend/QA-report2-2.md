@@ -1,118 +1,107 @@
-# QA Report 2.2: Redis Resilience and Integration
-
-## 1. **`worker.js` – Redis Connection Resilience**
-### **Issues**
-| **Issue**                          | **Criticality** | **Description**                                                                                             |
-|-------------------------------------|-----------------|-------------------------------------------------------------------------------------------------------------|
-| Hardcoded max retries               | Medium          | `MAX_RETRY_ATTEMPTS` is hardcoded to `5`. Should be configurable via `REDIS_MAX_RETRIES`.                   |
-| No explicit jitter                  | Low             | `async-retry` does not explicitly add jitter.                                                              |
-| No circuit breaker                  | High            | No circuit breaker to halt retries after repeated failures.                                                 |
-| No fallback storage                 | High            | No alternative storage (e.g., local cache) when Redis is unavailable.                                      |
-| Missing connection time logging     | Low             | Time taken to establish Redis connection is not logged.                                                     |
-
-### **Proposed Corrections**
-1. Make `MAX_RETRY_ATTEMPTS` configurable:
-   ```javascript
-   const MAX_RETRY_ATTEMPTS = parseInt(process.env.REDIS_MAX_RETRIES) || 5;
-   ```
-2. Add jitter to `async-retry`:
-   ```javascript
-   {
-     retries: MAX_RETRY_ATTEMPTS,
-     minTimeout: REDIS_RETRY_DELAY_MS,
-     maxTimeout: REDIS_RETRY_DELAY_MS * 10,
-     factor: 2, // Exponential backoff
-     randomize: true, // Jitter
-     onRetry: (error, attempt) => { ... }
-   }
-   ```
-3. Implement a circuit breaker (e.g., `opossum`):
-   ```javascript
-   const CircuitBreaker = require('opossum');
-   const redisBreaker = new CircuitBreaker(connectRedis, {
-     timeout: 5000,
-     errorThresholdPercentage: 50,
-     resetTimeout: 30000
-   });
-   ```
-4. Add fallback storage (e.g., `node-cache`):
-   ```javascript
-   const NodeCache = require('node-cache');
-   const localCache = new NodeCache({ stdTTL: 3600 });
-   ```
-5. Log connection time:
-   ```javascript
-   const startTime = Date.now();
-   await redisClient.connect();
-   log(`Redis connected in ${Date.now() - startTime}ms`);
-   ```
+# QA Report - Audit de Code
+**Date** : 20/09/2026
+**Projet** : MegaShop Backend
 
 ---
 
-## 2. **`docker-compose.yml` – Redis Health Checks**
-### **Issues**
-| **Issue**                          | **Criticality** | **Description**                                                                                             |
-|-------------------------------------|-----------------|-------------------------------------------------------------------------------------------------------------|
-| `express_app` lacks health checks   | Medium          | `express_app` does not wait for Redis to be healthy, which could cause race conditions.                     |
+## 1. Gestion des Erreurs (Critique)
+### Problème :
+- Absence de gestion d'erreurs explicite dans les fonctions asynchrones (ex: `server.js`, `tasks.js`).
+  - Aucune vérification pour `tasks.json` manquant ou corrompu.
+  - Logs exposant des données sensibles (ex: `userId`, `email`).
 
-### **Proposed Corrections**
-1. Add `condition: service_healthy` to `express_app`:
-   ```yaml
-   depends_on:
-     redis:
-       condition: service_healthy
-   ```
+### Étapes pour reproduire :
+1. Supprimer `tasks.json` et redémarrer le serveur.
+2. Observer le crash sans message d'erreur clair.
 
----
-
-## 3. **`server.js` – Redis Integration**
-### **Issues**
-| **Issue**                          | **Criticality** | **Description**                                                                                             |
-|-------------------------------------|-----------------|-------------------------------------------------------------------------------------------------------------|
-| Redis integration is inactive       | High            | Redis integration is commented out. Uncomment and test if required.                                        |
-| No degraded mode                    | High            | No degraded mode or fallback storage if Redis is unavailable.                                              |
-| No circuit breaker                  | High            | No circuit breaker to halt retries after repeated failures.                                                 |
-
-### **Proposed Corrections**
-1. Uncomment Redis integration and test:
-   ```javascript
-   const { createClient } = require('redis');
-   const redisClient = await connectRedis();
-   ```
-2. Add degraded mode:
-   ```javascript
-   let isRedisAvailable = true;
-   if (!isRedisAvailable) {
-     console.warn('Redis unavailable. Using local cache.');
-     // Use localCache.set() / localCache.get()
-   }
-   ```
-3. Implement a circuit breaker (e.g., `opossum`).
+### Correction proposée :
+- Ajouter `try/catch` dans toutes les fonctions asynchrones.
+- Utiliser un middleware de logging (ex: `winston`) pour masquer les données sensibles.
 
 ---
 
-## 4. **Security and Quality Checks**
-### **Findings**
-- **`QA-instructions.md`**: Not found. Recommend creating this file to document:
-  - `npm audit` results.
-  - `docker scan` results.
-  - `npm run lint` and `npm run typecheck` results.
-  - Redis-specific resilience requirements.
+## 2. Sécurité des Dépendances (Haut)
+### Problème :
+- Vulnérabilités critiques détectées par `npm audit` (ex: `lodash@4.17.20`).
+- `package-lock.json` non synchronisé avec `package.json`.
 
-### **Proposed Corrections**
-1. Create `QA-instructions.md` with:
-   ```markdown
-   # QA Instructions
-   ## Security Checks
-   - Run `npm audit` and fix critical/high vulnerabilities.
-   - Run `docker scan` and fix critical/high vulnerabilities.
+### Étapes pour reproduire :
+1. Exécuter `npm audit`.
+2. Comparer les versions dans `package.json` et `package-lock.json`.
 
-   ## Quality Checks
-   - Run `npm run lint` and fix all errors.
-   - Run `npm run typecheck` and fix all type errors.
+### Correction proposée :
+- Mettre à jour les dépendances vulnérables.
+- Exécuter `npm install --package-lock-only` pour synchroniser.
 
-   ## Redis Resilience Requirements
-   - Implement exponential backoff, jitter, and max retries.
-   - Add circuit breaking and fallback storage.
-   - Log retry attempts, reconnections, and connection time.
-   ```
+---
+
+## 3. Dockerfile (Critique)
+### Problème :
+- Exécution en root (`USER root`).
+- Image > 200 Mo (non optimisée).
+- Ports exposés inutilement (ex: `3000`, `6379`).
+
+### Étapes pour reproduire :
+1. Builder l'image : `docker build -t megashop .`.
+2. Vérifier la taille : `docker images | grep megashop`.
+3. Scanner les ports : `docker inspect <container_id>`.
+
+### Correction proposée :
+- Ajouter `USER node` et créer un utilisateur non-root.
+- Utiliser un **multi-stage build** pour réduire la taille.
+- Limiter les ports exposés dans `Dockerfile` et `docker-compose.yml`.
+
+---
+
+## 4. Bonnes Pratiques (Moyen)
+### Problème :
+- Variables d'environnement non validées (ex: `REDIS_URL`).
+- Utilisation de `innerHTML` non sanitizé dans `public/index.html`.
+
+### Étapes pour reproduire :
+1. Démarrer le serveur sans `.env`.
+2. Inspecter `public/index.html` pour les injections XSS potentielles.
+
+### Correction proposée :
+- Valider les variables avec `zod` ou `joi`.
+- Remplacer `innerHTML` par `textContent` ou utiliser DOMPurify.
+
+---
+
+## 5. Tests Obligatoires (Haut)
+### Problème :
+- Aucun test de résilience (ex: suppression de `tasks.json`).
+- Linting et typechecking désactivés (scripts manquants dans `package.json`).
+
+### Étapes pour reproduire :
+1. Supprimer `tasks.json` et redémarrer le serveur.
+2. Exécuter `npm run lint` (script inexistant).
+
+### Correction proposée :
+- Ajouter des tests pour les cas d'erreur (ex: `jest`).
+- Configurer `eslint` et `typescript` dans `package.json`.
+
+---
+
+## 6. Redis (Critique)
+### Problème :
+- Redis désactivé dans `server.js` (code commenté).
+- Aucun fallback en cas d'échec de connexion.
+
+### Étapes pour reproduire :
+1. Démarrer le serveur sans Redis.
+2. Observer l'absence de traitement asynchrone.
+
+### Correction proposée :
+- Décommenter et finaliser l'intégration de Redis.
+- Ajouter un fallback (ex: file d'attente locale).
+
+---
+
+## Recommandations Finales
+1. Prioriser les corrections critiques (Docker, Redis, gestion des erreurs).
+2. Automatiser les tests (GitHub Actions pour `npm audit`, `docker scan`).
+3. Documenter les changements dans `README.md`.
+
+---
+**Prochaine étape** : Appliquer les corrections et relancer un audit.
