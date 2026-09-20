@@ -66,6 +66,7 @@ const connectRedis = async () => {
     bailOnRedisFailure(err);
     throw err;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 };
 
 // Bail out and operate in degraded mode

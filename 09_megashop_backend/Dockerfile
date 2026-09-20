@@ -1,20 +1,22 @@
-# Utilise l'image officielle Node.js LTS
-FROM node:lts-slim
-
-# Crée un utilisateur non-root s'il n'existe pas
-RUN if ! id -u node > /dev/null 2>&1; then useradd -m node; fi
-
-# Définit le répertoire de travail
+# Stage 1: Build
+FROM node:lts-slim AS builder
 WORKDIR /home/node/app
-
-# Copie les fichiers nécessaires
-COPY --chown=node:node package.json ./
-COPY --chown=node:node server.js ./
-
-# Installe les dépendances (si package.json existe)
+COPY package.json ./
 RUN npm install --production
 
-# Expose le port 3000
+# Stage 2: Runtime
+FROM node:lts-slim
+
+# Crée un utilisateur non-root
+RUN if ! id -u node > /dev/null 2>&1; then useradd -m node; fi
+WORKDIR /home/node/app
+
+# Copie les fichiers depuis le stage builder
+COPY --chown=node:node --from=builder /home/node/app/node_modules ./node_modules
+COPY --chown=node:node server.js ./
+COPY --chown=node:node package.json ./
+
+# Limite les ports exposés
 EXPOSE 3000
 
 # Passe à l'utilisateur non-root
