@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  redis:
+  cache-queue:
     image: redis:alpine
-    container_name: megashop_redis
+    container_name: megashop_cache_queue
     restart: unless-stopped
     ports:
       - "127.0.0.1:6379:6379"
@@ -17,44 +17,41 @@ services:
       timeout: 3s
       retries: 5
 
-  express_app:
+  api-webhook:
     build: .
-    container_name: megashop_express
+    container_name: megashop_api_webhook
     restart: unless-stopped
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_URL=redis://cache-queue:6379
       - NODE_ENV=production
+      - PORT=3000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY}
+      - LANGFUSE_BASEURL=${LANGFUSE_BASE_URL}
     ports:
       - "127.0.0.1:3000:3000"
-    volumes:
-      - ./server.js:/home/node/app/server.js:ro
-      - ./package.json:/home/node/app/package.json:ro
-      - ./tasks.json:/home/node/app/tasks.json:ro
-    user: node
     depends_on:
-      - redis
+      - cache-queue
     networks:
       - megashop_network
 
-  worker:
+  async-worker:
     build: .
-    container_name: megashop_worker
+    container_name: megashop_async_worker
     restart: unless-stopped
     command: node worker.js
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_URL=redis://cache-queue:6379
       - NODE_ENV=production
-    volumes:
-      - ./worker.js:/home/node/app/worker.js:ro
-      - ./package.json:/home/node/app/package.json:ro
-    user: node
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL}
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY}
+      - LANGFUSE_BASEURL=${LANGFUSE_BASEURL}
     depends_on:
-      redis:
+      cache-queue:
         condition: service_healthy
-      express_app:
-        condition: service_started
     networks:
       - megashop_network
 

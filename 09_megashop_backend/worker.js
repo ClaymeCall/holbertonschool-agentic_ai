@@ -1,45 +1,46 @@
-"use strict";
+import dotenv from 'dotenv';
+import ioredis from 'ioredis';
+import { OpenAI } from 'openai';
+import { Langfuse } from 'langfuse';
+import { z } from 'zod';
+import readline from 'readline';
 
-require('dotenv').config();
-const { createClient } = require('redis');
-const { OpenAI } = require('openai');
-const { observeOpenAI } = require('@langfuse/openai');
-const asyncRetry = require('async-retry');
+const Redis = ioredis;
 
-// Configuration
-const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || process.env.LANGFUSE_BASE_URL || "https://api.openai.com/v1";
-const LANGFUSE_SECRET_KEY = process.env.LANGFUSE_SECRET_KEY;
-const LANGFUSE_PUBLIC_KEY = process.env.LANGFUSE_PUBLIC_KEY;
+// Load environment variables
+dotenv.config();
 
-// Validate critical environment variables
-if (!OPENAI_API_KEY) {
-    log("Critical: OPENAI_API_KEY environment variable is missing or invalid");
-    process.exit(1);
-}
-if (!LANGFUSE_SECRET_KEY) {
-    log("Critical: LANGFUSE_SECRET_KEY environment variable is missing or invalid");
-    process.exit(1);
-}
-const TRANSACTION_QUEUE = "transactions:queue";
-const REDIS_RETRY_DELAY_MS = parseInt(process.env.REDIS_RETRY_DELAY_MS || "1000");
-const MAX_RETRY_ATTEMPTS = 5;
-let isRedisAvailable = true;
+// Validate environment variables
+const envSchema = z.object({
+  REDIS_URL: z.string().default('redis://cache-queue:6379'),
+  OPENAI_API_KEY: z.string().min(1),
+  OPENAI_BASE_URL: z.string().min(1),
+  LANGFUSE_PUBLIC_KEY: z.string().min(1),
+  LANGFUSE_SECRET_KEY: z.string().min(1),
+  LANGFUSE_BASEURL: z.string().default('https://cloud.langfuse.com'),
+});
+
+const env = envSchema.parse(process.env);
 
 // Initialize clients
-const redisClient = createClient({ url: REDIS_URL });
-const openai = observeOpenAI(
-  new OpenAI({
-    apiKey: OPENAI_API_KEY,
-    baseURL: OPENAI_BASE_URL,
-  }),
-  {
-    secretKey: LANGFUSE_SECRET_KEY,
-    publicKey: LANGFUSE_PUBLIC_KEY,
-    baseUrl: process.env.LANGFUSE_BASE_URL,
-  }
-);
+const redisClient = new Redis({
+  host: env.REDIS_URL.split('//')[1].split(':')[0],
+  port: parseInt(env.REDIS_URL.split(':')[2]),
+});
+
+const openai = new OpenAI({
+  apiKey: env.OPENAI_API_KEY,
+  baseURL: env.OPENAI_BASE_URL,
+  defaultHeaders: {
+    'Content-Type': 'application/json',
+  },
+});
+
+const langfuse = new Langfuse({
+  publicKey: env.LANGFUSE_PUBLIC_KEY,
+  secretKey: env.LANGFUSE_SECRET_KEY,
+  baseUrl: env.LANGFUSE_BASEURL,
+});
 
 // Logger
 const log = (message) => {
@@ -47,165 +48,154 @@ const log = (message) => {
   console.log(`[${timestamp}] ${message}`);
 };
 
-// Connect to Redis with retry
-const connectRedis = async () => {
-  try {
-    await asyncRetry(
-      async (bail) => {
-        try {
-          await redisClient.connect();
-          log("Connected to Redis");
-          isRedisAvailable = true;
-        } catch (err) {
-          isRedisAvailable = false;
-          log(`Redis connection error: ${err.message}`);
-          throw err;
-        }
-      },
-      {
-        retries: MAX_RETRY_ATTEMPTS,
-        minTimeout: REDIS_RETRY_DELAY_MS,
-        maxTimeout: REDIS_RETRY_DELAY_MS * 10,
-        onRetry: (error, attempt) => {
-          log(`Retry attempt ${attempt}/${MAX_RETRY_ATTEMPTS} for Redis connection: ${error.message}`);
-        }
+// Human-in-the-Loop (HITL) validation
+const hitlValidation = async (transaction, riskLevel, comment) => {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve) => {
+    rl.question(
+      `[HITL] Transaction ${transaction.orderId} has risk level: ${riskLevel}. Comment: ${comment}\n` +
+      `Approve (A) or Reject (R)? `,
+      (answer) => {
+        rl.close();
+        const approved = answer.trim().toUpperCase() === 'A';
+        log(`[HITL] Transaction ${transaction.orderId} ${approved ? 'approved' : 'rejected'}`);
+        
+        // Score the human decision for governance
+        langfuse.score({
+          traceId: transaction.orderId,
+          name: 'gouvernance_hitl',
+          value: approved ? 1 : 0,
+          comment: `Human decision: ${approved ? 'approved' : 'rejected'}`,
+        });
+        
+        resolve(approved);
       }
     );
-  } catch (err) {
-    log(`Max retries (${MAX_RETRY_ATTEMPTS}) exceeded for Redis connection: ${err.message}`);
-    bailOnRedisFailure(err);
-    throw err;
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-};
-
-// Bail out and operate in degraded mode
-const bailOnRedisFailure = (err) => {
-  log(`Operating in degraded mode due to Redis unavailability: ${err.message}`);
-  isRedisAvailable = false;
+  });
 };
 
 // Process transaction with LLM
+const transactionSchema = z.object({
+  orderId: z.string(),
+  amount: z.number(),
+  type: z.string(),
+});
+
 const processTransaction = async (transaction) => {
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+    // Validate transaction data before sending to LLM
+    const validatedTransaction = transactionSchema.parse(transaction);
+    
+    const payload = {
+      model: 'gpt-4o',
       messages: [
         {
-          role: "system",
-          content: "Analyze the following transaction for fraud detection. Respond with a JSON object containing 'isFraud': boolean and 'reason': string."
+          role: 'system',
+          content: 'Analyze the following transaction for fraud detection. ' +
+                   'Respond with a JSON object containing:\n' +
+                   '- riskLevel: "low", "medium", or "high"\n' +
+                   '- comment: string explaining the risk level',
         },
         {
-          role: "user",
-          content: JSON.stringify(transaction),
+          role: 'user',
+          content: JSON.stringify(validatedTransaction),
         },
       ],
-    });
+    };
+    log(`[DEBUG] LLM Payload: ${JSON.stringify(payload)}`);
+    
+    const response = await openai.chat.completions.create(payload);
 
-    return JSON.parse(response.choices[0].message.content);
+    const result = JSON.parse(response.choices[0].message.content);
+    log(`[LLM] Transaction ${transaction.orderId} risk analysis: ${JSON.stringify(result)}`);
+    
+    // Trace the LLM call in Langfuse
+    const trace = langfuse.trace({
+      name: 'fraud_detection',
+      id: transaction.orderId,
+      input: transaction,
+      output: result,
+    });
+    
+    // Score the risk level for FinOps
+    let riskScore;
+    switch (result.riskLevel) {
+      case 'high':
+        riskScore = 1;
+        break;
+      case 'medium':
+        riskScore = 0.5;
+        break;
+      case 'low':
+        riskScore = 0;
+        break;
+      default:
+        riskScore = 0.5;
+    }
+    
+    trace.score({
+      name: 'risk_score',
+      value: riskScore,
+      comment: `Risk level: ${result.riskLevel}`,
+    });
+    
+    return result;
   } catch (err) {
-    log(`LLM processing error: ${err.message}`);
+    log(`[ERROR] LLM processing failed: ${err.message}. Details: ${JSON.stringify(err.response?.data || err)}`);
     throw err;
   }
 };
 
 // Worker loop
 const processQueue = async () => {
-  try {
-    if (!isRedisAvailable) {
-      log("Redis unavailable. Operating in degraded mode. Retrying connection...");
-      await new Promise(resolve => setTimeout(resolve, REDIS_RETRY_DELAY_MS));
-      await connectRedis();
-      try {
-        setImmediate(processQueue);
-      } catch (err) {
-        log(`Error in processQueue scheduling: ${err.message}`);
+  while (true) {
+    try {
+      const transaction = await redisClient.brpop('payment_queue', 0);
+      if (!transaction) continue;
+      
+      const [, payload] = transaction;
+      const transactionData = JSON.parse(payload);
+      log(`Processing transaction: ${transactionData.orderId}`);
+      
+      // Process transaction with LLM
+      const analysis = await processTransaction(transactionData);
+      
+      // Human-in-the-Loop validation for medium/high risk
+      if (analysis.riskLevel === 'medium' || analysis.riskLevel === 'high') {
+        const approved = await hitlValidation(transactionData, analysis.riskLevel, analysis.comment);
+        if (!approved) {
+          log(`[HITL] Transaction ${transactionData.orderId} rejected by human reviewer`);
+          continue;
+        }
       }
-      return;
-    }
-
-    const transaction = await redisClient.brPop(TRANSACTION_QUEUE, 0);
-    if (!transaction) return;
-
-    if (!transaction?.element) {
-      log("Invalid transaction format: missing 'element'");
-      return;
-    }
-    
-    let transactionData;
-    try {
-      transactionData = JSON.parse(transaction.element);
+      
+      log(`Transaction ${transactionData.orderId} processed successfully`);
     } catch (err) {
-      log(`[ERROR] Failed to parse transaction data: ${err.message}. Skipping...`);
-      return;
-    }
-    
-    if (!transactionData?.id) {
-      log("Invalid transaction data: missing 'id'");
-      return;
-    }
-    
-    log(`Processing transaction: ${transactionData.id}`);
-
-    let analysis;
-    try {
-      analysis = await processTransaction(transactionData);
-    } catch (err) {
-      log(`[ERROR] LLM processing failed: ${err.message}. Skipping analysis...`);
-      analysis = { isFraud: false, reason: "LLM unavailable" };
-    }
-    log(`Analysis result for transaction ${transactionData.id}: ${JSON.stringify(analysis)}`);
-  } catch (err) {
-    log(`Error processing queue: ${err.message}`);
-    isRedisAvailable = false;
-  } finally {
-    // Restart processing with error handling
-    try {
-      setImmediate(processQueue);
-    } catch (err) {
-      log(`Error in processQueue scheduling: ${err.message}`);
+      log(`[ERROR] Error processing queue: ${err.message}`);
     }
   }
 };
 
 // Main
-let circuitBreakerOpen = false;
-const CIRCUIT_BREAKER_RESET_DELAY_MS = 30000; // 30 seconds
-
 const main = async () => {
-  if (circuitBreakerOpen) {
-    log("Circuit breaker is open. Skipping retry until reset.");
-    return;
-  }
-  
   try {
-    await connectRedis();
-    log("Worker started");
+    log('Worker started');
     await processQueue();
   } catch (err) {
-    log(`Fatal error: ${err.message}. Retrying...`);
-    setTimeout(main, REDIS_RETRY_DELAY_MS);
+    log(`[ERROR] Fatal error: ${err.message}`);
+    process.exit(1);
   }
-};
-
-// Open circuit breaker on repeated failures
-const bailOnRedisFailure = (err) => {
-  log(`Operating in degraded mode due to Redis unavailability: ${err.message}`);
-  isRedisAvailable = false;
-  
-  // Open circuit breaker after max retries
-  circuitBreakerOpen = true;
-  setTimeout(() => {
-    circuitBreakerOpen = false;
-    log("Circuit breaker reset. Retrying Redis connection...");
-    main();
-  }, CIRCUIT_BREAKER_RESET_DELAY_MS);
 };
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
-  log("Shutting down worker...")
+  log('Shutting down worker...');
   await redisClient.quit();
+  await langfuse.shutdownAsync();
   process.exit(0);
 });
 

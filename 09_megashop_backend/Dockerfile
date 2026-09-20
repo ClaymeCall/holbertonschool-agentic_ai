@@ -1,25 +1,22 @@
-# Stage 1: Build
-FROM node:18-alpine AS builder
+FROM node:20.12.0-alpine
 WORKDIR /app
+
+# Copie les fichiers nécessaires
 COPY package*.json ./
-RUN npm ci --only=production
+COPY api.js ./
+COPY worker.js ./
 
-# Stage 2: Runtime
-FROM node:18-alpine
-WORKDIR /app
+# Installe les dépendances
+RUN npm ci --only=production --legacy-peer-deps
 
-# Crée un utilisateur non-root
-RUN adduser -D node
+# Change ownership to node user
+RUN chown -R node:node /app
 
-# Copy production dependencies and app files
-COPY --from=builder /app/node_modules ./node_modules
-COPY --chown=node:node server.js worker.js package*.json ./
+# Switch to non-root user
+USER node
 
 # Limite les ports exposés
 EXPOSE 3000
 
-# Passe à l'utilisateur non-root
-USER node
-
 # Lance le serveur
-CMD ["node", "server.js"]
+CMD ["node", "api.js"]
