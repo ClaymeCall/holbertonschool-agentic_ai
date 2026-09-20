@@ -1,20 +1,19 @@
 # Stage 1: Build
-FROM node:lts-alpine AS builder
-WORKDIR /home/node/app
-COPY package.json ./
-# Use minimal node_modules with only required dependencies
-COPY minimal_node_modules/node_modules ./node_modules
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
 
 # Stage 2: Runtime
-FROM node:lts-alpine
+FROM node:18-alpine
+WORKDIR /app
 
 # Crée un utilisateur non-root
-RUN if ! id -u node > /dev/null 2>&1; then adduser -D node; fi
-WORKDIR /home/node/app
+RUN adduser -D node
 
-# Copy all required files in a single layer
-COPY --chown=node:node minimal_node_modules/node_modules ./node_modules
-COPY --chown=node:node server.js package.json ./
+# Copy production dependencies and app files
+COPY --from=builder /app/node_modules ./node_modules
+COPY --chown=node:node server.js worker.js package*.json ./
 
 # Limite les ports exposés
 EXPOSE 3000

@@ -17,6 +17,22 @@ const REDIS_URL = env?.REDIS_URL || "redis://localhost:6379";
 const REDIS_RETRY_DELAY_MS = env?.REDIS_RETRY_DELAY_MS || 1000;
 const REDIS_MAX_RETRIES = env?.REDIS_MAX_RETRIES || 5;
 
+const TRANSACTION_QUEUE = "transactions:queue";
+
+// Initialize Redis client
+const redisClient = createClient({ url: REDIS_URL });
+redisClient.on('error', (err) => {
+    console.error(`Redis error: ${err.message}`);
+});
+
+(async () => {
+    try {
+        await redisClient.connect();
+    } catch (err) {
+        console.error(`Failed to connect to Redis: ${err.message}`);
+    }
+})();
+
 // Local fallback queue
 let localQueue = [];
 
@@ -65,17 +81,6 @@ const server = http.createServer((req, res) => {
             body += chunk.toString();
         });
 
-        req.on('data', (chunk) => {
-            try {
-                body += chunk.toString();
-            } catch (error) {
-                const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                console.error(`[${timestamp}] Error reading request data: ${error.message}`);
-                res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Invalid request data' }));
-            }
-        });
-
         req.on('end', async () => {
             const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
             try {
@@ -99,9 +104,48 @@ const server = http.createServer((req, res) => {
                     status: payload.status,
                     timestamp: payload.timestamp
                 };
-                console.log(`[${timestamp}] [PAYMENT WEBHOOK] Received payment notification: ${JSON.stringify(sanitizedPayload)}`);
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ status: 'success' }));
+
+                // Validate field types
+                if (typeof payload.transaction_id !== 'string') {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Field "transaction_id" must be a string' }));
+                    return;
+                }
+                if (typeof payload.amount !== 'number') {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Field "amount" must be a number' }));
+                    return;
+                }
+                if (typeof payload.currency !== 'string') {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Field "currency" must be a string' }));
+                    return;
+                }
+                if (typeof payload.status !== 'string') {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Field "status" must be a string' }));
+                    return;
+                }
+                if (isNaN(Date.parse(payload.timestamp))) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Field "timestamp" must be a valid date' }));
+                    return;
+                }
+
+                const requestId = require('crypto').randomUUID();
+                console.log(`[${timestamp}] [PAYMENT WEBHOOK] [RequestID: ${requestId}] Received payment notification: ${JSON.stringify(sanitizedPayload)}`);
+
+                // Push to Redis queue
+                try {
+                    await redisClient.lPush(TRANSACTION_QUEUE, JSON.stringify(sanitizedPayload));
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ status: 'success' }));
+                } catch (redisError) {
+                    console.error(`[${timestamp}] Redis error: ${redisError.message}`);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Internal server error' }));
+                    return;
+                }
             } catch (error) {
                 console.error(`[${timestamp}] Error processing webhook: ${error.message}`);
 

@@ -22,16 +22,6 @@ if (!LANGFUSE_SECRET_KEY) {
     log("Critical: LANGFUSE_SECRET_KEY environment variable is missing or invalid");
     process.exit(1);
 }
-
-// Validate critical environment variables
-if (!OPENAI_API_KEY) {
-    log("Critical: OPENAI_API_KEY environment variable is missing or invalid");
-    process.exit(1);
-}
-if (!LANGFUSE_SECRET_KEY) {
-    log("Critical: LANGFUSE_SECRET_KEY environment variable is missing or invalid");
-    process.exit(1);
-}
 const TRANSACTION_QUEUE = "transactions:queue";
 const REDIS_RETRY_DELAY_MS = parseInt(process.env.REDIS_RETRY_DELAY_MS || "1000");
 const MAX_RETRY_ATTEMPTS = 5;
@@ -146,7 +136,7 @@ const processQueue = async () => {
     try {
       transactionData = JSON.parse(transaction.element);
     } catch (err) {
-      log(`Failed to parse transaction data: ${err.message}`);
+      log(`[ERROR] Failed to parse transaction data: ${err.message}. Skipping...`);
       return;
     }
     
@@ -157,7 +147,13 @@ const processQueue = async () => {
     
     log(`Processing transaction: ${transactionData.id}`);
 
-    const analysis = await processTransaction(transactionData);
+    let analysis;
+    try {
+      analysis = await processTransaction(transactionData);
+    } catch (err) {
+      log(`[ERROR] LLM processing failed: ${err.message}. Skipping analysis...`);
+      analysis = { isFraud: false, reason: "LLM unavailable" };
+    }
     log(`Analysis result for transaction ${transactionData.id}: ${JSON.stringify(analysis)}`);
   } catch (err) {
     log(`Error processing queue: ${err.message}`);
