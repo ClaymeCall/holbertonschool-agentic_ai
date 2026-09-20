@@ -12,6 +12,26 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || process.env.LANGFUSE_BASE_URL || "https://api.openai.com/v1";
 const LANGFUSE_SECRET_KEY = process.env.LANGFUSE_SECRET_KEY;
 const LANGFUSE_PUBLIC_KEY = process.env.LANGFUSE_PUBLIC_KEY;
+
+// Validate critical environment variables
+if (!OPENAI_API_KEY) {
+    log("Critical: OPENAI_API_KEY environment variable is missing or invalid");
+    process.exit(1);
+}
+if (!LANGFUSE_SECRET_KEY) {
+    log("Critical: LANGFUSE_SECRET_KEY environment variable is missing or invalid");
+    process.exit(1);
+}
+
+// Validate critical environment variables
+if (!OPENAI_API_KEY) {
+    log("Critical: OPENAI_API_KEY environment variable is missing or invalid");
+    process.exit(1);
+}
+if (!LANGFUSE_SECRET_KEY) {
+    log("Critical: LANGFUSE_SECRET_KEY environment variable is missing or invalid");
+    process.exit(1);
+}
 const TRANSACTION_QUEUE = "transactions:queue";
 const REDIS_RETRY_DELAY_MS = parseInt(process.env.REDIS_RETRY_DELAY_MS || "1000");
 const MAX_RETRY_ATTEMPTS = 5;
@@ -106,14 +126,35 @@ const processQueue = async () => {
       log("Redis unavailable. Operating in degraded mode. Retrying connection...");
       await new Promise(resolve => setTimeout(resolve, REDIS_RETRY_DELAY_MS));
       await connectRedis();
-      setImmediate(processQueue);
+      try {
+        setImmediate(processQueue);
+      } catch (err) {
+        log(`Error in processQueue scheduling: ${err.message}`);
+      }
       return;
     }
 
     const transaction = await redisClient.brPop(TRANSACTION_QUEUE, 0);
     if (!transaction) return;
 
-    const transactionData = JSON.parse(transaction.element);
+    if (!transaction?.element) {
+      log("Invalid transaction format: missing 'element'");
+      return;
+    }
+    
+    let transactionData;
+    try {
+      transactionData = JSON.parse(transaction.element);
+    } catch (err) {
+      log(`Failed to parse transaction data: ${err.message}`);
+      return;
+    }
+    
+    if (!transactionData?.id) {
+      log("Invalid transaction data: missing 'id'");
+      return;
+    }
+    
     log(`Processing transaction: ${transactionData.id}`);
 
     const analysis = await processTransaction(transactionData);
@@ -122,13 +163,25 @@ const processQueue = async () => {
     log(`Error processing queue: ${err.message}`);
     isRedisAvailable = false;
   } finally {
-    // Restart processing
-    setImmediate(processQueue);
+    // Restart processing with error handling
+    try {
+      setImmediate(processQueue);
+    } catch (err) {
+      log(`Error in processQueue scheduling: ${err.message}`);
+    }
   }
 };
 
 // Main
+let circuitBreakerOpen = false;
+const CIRCUIT_BREAKER_RESET_DELAY_MS = 30000; // 30 seconds
+
 const main = async () => {
+  if (circuitBreakerOpen) {
+    log("Circuit breaker is open. Skipping retry until reset.");
+    return;
+  }
+  
   try {
     await connectRedis();
     log("Worker started");
@@ -137,6 +190,20 @@ const main = async () => {
     log(`Fatal error: ${err.message}. Retrying...`);
     setTimeout(main, REDIS_RETRY_DELAY_MS);
   }
+};
+
+// Open circuit breaker on repeated failures
+const bailOnRedisFailure = (err) => {
+  log(`Operating in degraded mode due to Redis unavailability: ${err.message}`);
+  isRedisAvailable = false;
+  
+  // Open circuit breaker after max retries
+  circuitBreakerOpen = true;
+  setTimeout(() => {
+    circuitBreakerOpen = false;
+    log("Circuit breaker reset. Retrying Redis connection...");
+    main();
+  }, CIRCUIT_BREAKER_RESET_DELAY_MS);
 };
 
 // Graceful shutdown

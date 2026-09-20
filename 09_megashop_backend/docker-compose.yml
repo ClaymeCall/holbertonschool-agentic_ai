@@ -30,6 +30,7 @@ services:
     volumes:
       - ./server.js:/home/node/app/server.js:ro
       - ./package.json:/home/node/app/package.json:ro
+      - ./tasks.json:/home/node/app/tasks.json:ro
     user: node
     depends_on:
       - redis

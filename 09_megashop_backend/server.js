@@ -29,24 +29,27 @@ async function connectRedis() {
     let delay = REDIS_RETRY_DELAY_MS;
     let isConnected = false;
 
-    redisClient.on('error', async (err) => {
+    redisClient.on('error', (err) => {
+        const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
         if (retries < REDIS_MAX_RETRIES) {
             retries++;
             delay = delay * 2 * (1 + Math.random() * 0.1); // Exponential backoff with jitter
-            console.error(`Redis connection error: ${err.message}. Retrying in ${delay}ms...`);
-            await new Promise(resolve => setTimeout(resolve, delay));
-            await connectRedis();
+            console.error(`[${timestamp}] Redis connection error: ${err.message}. Retrying in ${delay}ms...`);
+            setTimeout(() => connectRedis(), delay);
         } else {
-            console.error('Max Redis retries reached. Falling back to local queue.');
+            console.error(`[${timestamp}] Max Redis retries reached. Falling back to local queue.`);
         }
     });
 
     try {
         await redisClient.connect();
-        console.log('Connected to Redis');
+        const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        console.log(`[${timestamp}] Connected to Redis`);
         isConnected = true;
     } catch (err) {
-        console.error('Failed to connect to Redis:', err);
+        const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        console.error(`[${timestamp}] Failed to connect to Redis: ${err.message}`);
+        throw err;
     }
 
     return { redisClient, isConnected };
@@ -62,7 +65,19 @@ const server = http.createServer((req, res) => {
             body += chunk.toString();
         });
 
-        req.on('end', () => {
+        req.on('data', (chunk) => {
+            try {
+                body += chunk.toString();
+            } catch (error) {
+                const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                console.error(`[${timestamp}] Error reading request data: ${error.message}`);
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid request data' }));
+            }
+        });
+
+        req.on('end', async () => {
+            const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
             try {
                 const payload = JSON.parse(body);
                 const requiredFields = ['transaction_id', 'amount', 'currency', 'status', 'timestamp'];
@@ -84,11 +99,11 @@ const server = http.createServer((req, res) => {
                     status: payload.status,
                     timestamp: payload.timestamp
                 };
-                console.log(`[PAYMENT WEBHOOK] Received payment notification: ${JSON.stringify(sanitizedPayload)}`);
+                console.log(`[${timestamp}] [PAYMENT WEBHOOK] Received payment notification: ${JSON.stringify(sanitizedPayload)}`);
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ status: 'success' }));
             } catch (error) {
-                console.error('Error processing webhook:', error.message);
+                console.error(`[${timestamp}] Error processing webhook: ${error.message}`);
 
                 if (error instanceof SyntaxError) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -107,7 +122,8 @@ const server = http.createServer((req, res) => {
 
 // Handle missing tasks.json gracefully
 server.listen(PORT, async () => {
-    console.log(`Server running on port ${PORT}`);
+    const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    console.log(`[${timestamp}] Server running on port ${PORT}`);
     
     // Redis connection initialization with fallback
     let redisClient;
@@ -117,55 +133,6 @@ server.listen(PORT, async () => {
         redisClient = result.redisClient;
         isRedisConnected = result.isConnected;
     } catch (err) {
-        console.error('Failed to connect to Redis:', err);
+        console.error(`[${timestamp}] Failed to connect to Redis: ${err.message}`);
     }
-
-    // Process payment webhook with Redis or local fallback
-    if (req.method === 'POST' && reqUrl.pathname === '/api/webhooks/payments') {
-        let body = '';
-
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
-
-        req.on('end', async () => {
-            try {
-                const payload = JSON.parse(body);
-                const requiredFields = ['transaction_id', 'amount', 'currency', 'status', 'timestamp'];
-
-                const missingFields = requiredFields.filter(field => !(field in payload));
-
-                if (missingFields.length > 0) {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({
-                        error: `Missing required fields: ${missingFields.join(', ')}`
-                    }));
-                    return;
-                }
-
-                console.log(`[PAYMENT WEBHOOK] Received payment notification: ${JSON.stringify(payload)}`);
-
-                // Push to Redis or local queue
-                if (isRedisConnected && redisClient) {
-                    await redisClient.lPush('transactions:queue', JSON.stringify(payload));
-                    console.log('Payment added to Redis queue');
-                } else {
-                    localQueue.push(payload);
-                    console.log('Payment added to local queue (Redis unavailable)');
-                }
-
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ status: 'success' }));
-            } catch (error) {
-                console.error('Error processing webhook:', error);
-
-                if (error instanceof SyntaxError) {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
-                } else {
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Internal server error' }));
-                }
-            }
-        });
-    });
+});
