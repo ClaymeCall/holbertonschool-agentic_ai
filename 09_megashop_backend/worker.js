@@ -3,6 +3,7 @@ import ioredis from 'ioredis';
 import { OpenAI } from 'openai';
 import { Langfuse } from 'langfuse';
 import { z } from 'zod';
+import { createInterface } from 'readline/promises';
 import readline from 'readline';
 
 const Redis = ioredis;
@@ -15,6 +16,7 @@ const envSchema = z.object({
   REDIS_URL: z.string().default('redis://cache-queue:6379'),
   OPENAI_API_KEY: z.string().min(1),
   OPENAI_BASE_URL: z.string().min(1),
+  OPENAI_MODEL: z.string().default('mistral-medium-latest'),
   LANGFUSE_PUBLIC_KEY: z.string().min(1),
   LANGFUSE_SECRET_KEY: z.string().min(1),
   LANGFUSE_BASEURL: z.string().default('https://cloud.langfuse.com'),
@@ -58,20 +60,20 @@ const hitlValidation = async (transaction, riskLevel, comment) => {
   return new Promise((resolve) => {
     rl.question(
       `[HITL] Transaction ${transaction.orderId} has risk level: ${riskLevel}. Comment: ${comment}\n` +
-      `Approve (A) or Reject (R)? `,
+      `Autoriser (o) ou Refuser (n)? `,
       (answer) => {
         rl.close();
-        const approved = answer.trim().toUpperCase() === 'A';
-        log(`[HITL] Transaction ${transaction.orderId} ${approved ? 'approved' : 'rejected'}`);
-        
-        // Score the human decision for governance
+        const approved = answer.trim().toLowerCase() === 'o';
+        log(`[HITL] Transaction ${transaction.orderId} ${approved ? 'autorisée' : 'refusée'}`);
+
+        // Score the human decision for governance and attach to existing trace
         langfuse.score({
           traceId: transaction.orderId,
           name: 'gouvernance_hitl',
           value: approved ? 1 : 0,
-          comment: `Human decision: ${approved ? 'approved' : 'rejected'}`,
+          comment: `Décision humaine: ${approved ? 'autorisée' : 'refusée'}`,
         });
-        
+
         resolve(approved);
       }
     );
@@ -85,13 +87,42 @@ const transactionSchema = z.object({
   type: z.string(),
 });
 
+const refundPreHook = async (transaction) => {
+  if (transaction.type !== 'refund') return true;
+
+  const rl = createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  try {
+    const answer = await rl.question(
+      `[PRE-HOOK] Transaction ${transaction.orderId} is a refund. Continue? (o/n) `,
+    );
+    return answer.trim().toLowerCase() === 'o';
+  } catch (err) {
+    log(`[ERROR] Pre-hook failed: ${err.message}. Assuming no confirmation in Docker environment.`);
+    return false;
+  } finally {
+    rl.close();
+  }
+};
+
 const processTransaction = async (transaction) => {
   try {
     // Validate transaction data before sending to LLM
     const validatedTransaction = transactionSchema.parse(transaction);
-    
+
+    // Pre-hook for refunds
+    const shouldContinue = await refundPreHook(validatedTransaction);
+    if (!shouldContinue) {
+      log(`[PRE-HOOK] Transaction ${transaction.orderId} cancelled by user.`);
+      return { riskLevel: 'low', comment: 'Cancelled by pre-hook' };
+    }
+
     const payload = {
-      model: 'gpt-4o',
+      model: env.OPENAI_MODEL,
+      response_format: {type: 'json_object'},
       messages: [
         {
           role: 'system',
@@ -107,12 +138,12 @@ const processTransaction = async (transaction) => {
       ],
     };
     log(`[DEBUG] LLM Payload: ${JSON.stringify(payload)}`);
-    
+
     const response = await openai.chat.completions.create(payload);
 
     const result = JSON.parse(response.choices[0].message.content);
     log(`[LLM] Transaction ${transaction.orderId} risk analysis: ${JSON.stringify(result)}`);
-    
+
     // Trace the LLM call in Langfuse
     const trace = langfuse.trace({
       name: 'fraud_detection',
@@ -120,7 +151,7 @@ const processTransaction = async (transaction) => {
       input: transaction,
       output: result,
     });
-    
+
     // Score the risk level for FinOps
     let riskScore;
     switch (result.riskLevel) {
@@ -136,13 +167,13 @@ const processTransaction = async (transaction) => {
       default:
         riskScore = 0.5;
     }
-    
+
     trace.score({
       name: 'risk_score',
       value: riskScore,
       comment: `Risk level: ${result.riskLevel}`,
     });
-    
+
     return result;
   } catch (err) {
     log(`[ERROR] LLM processing failed: ${err.message}. Details: ${JSON.stringify(err.response?.data || err)}`);
@@ -156,14 +187,14 @@ const processQueue = async () => {
     try {
       const transaction = await redisClient.brpop('payment_queue', 0);
       if (!transaction) continue;
-      
+
       const [, payload] = transaction;
       const transactionData = JSON.parse(payload);
       log(`Processing transaction: ${transactionData.orderId}`);
-      
+
       // Process transaction with LLM
       const analysis = await processTransaction(transactionData);
-      
+
       // Human-in-the-Loop validation for medium/high risk
       if (analysis.riskLevel === 'medium' || analysis.riskLevel === 'high') {
         const approved = await hitlValidation(transactionData, analysis.riskLevel, analysis.comment);
@@ -172,7 +203,7 @@ const processQueue = async () => {
           continue;
         }
       }
-      
+
       log(`Transaction ${transactionData.orderId} processed successfully`);
     } catch (err) {
       log(`[ERROR] Error processing queue: ${err.message}`);
@@ -191,12 +222,22 @@ const main = async () => {
   }
 };
 
-// Graceful shutdown
-process.on('SIGINT', async () => {
+// Graceful shutdown handler
+async function safeExit(code = 0) {
   log('Shutting down worker...');
   await redisClient.quit();
-  await langfuse.shutdownAsync();
-  process.exit(0);
+  await langfuse.flushAsync();
+  process.exit(code);
+}
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  await safeExit(0);
+});
+
+// Ensure Langfuse data is flushed on beforeExit
+process.on('beforeExit', async () => {
+  await langfuse.flushAsync();
 });
 
 // Start worker

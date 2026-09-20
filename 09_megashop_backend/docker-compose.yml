@@ -48,7 +48,7 @@ services:
       - OPENAI_BASE_URL=${OPENAI_BASE_URL}
       - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
       - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY}
-      - LANGFUSE_BASEURL=${LANGFUSE_BASEURL}
+      - LANGFUSE_BASEURL=${LANGFUSE_BASE_URL}
     depends_on:
       cache-queue:
         condition: service_healthy
